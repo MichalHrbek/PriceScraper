@@ -1,7 +1,7 @@
 from ScraperTesco import ScraperTesco
 from ScraperBilla import ScraperBilla
 from ScraperAlbert import ScraperAlbert
-import json, time, os, datetime
+import json, time, os
 
 if not os.path.exists("out"):
 	os.makedirs("out")
