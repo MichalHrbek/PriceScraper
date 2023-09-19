@@ -1,7 +1,7 @@
 from ScraperTesco import ScraperTesco
 from ScraperBilla import ScraperBilla
 from ScraperAlbert import ScraperAlbert
-import json, time, os
+import json, time, os, gzip
 
 if not os.path.exists("out"):
 	os.makedirs("out")
@@ -14,5 +14,5 @@ for s in scrapers:
 	x = [i.__dict__ for i in s.scrape()]
 	print(int(time.time() - start_time), "seconds")
 
-	with open(f"out/{int(start_time)}.{s.__name__}.json", 'w') as f:
+	with gzip.open(f"out/{int(start_time)}.{s.__name__}.json.gz", 'w') as f:
 		f.write(json.dumps(x, ensure_ascii=False, indent="	"))
