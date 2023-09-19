@@ -13,11 +13,11 @@ HEADERS = {
 
 class ScraperTesco(ScraperBase): # Scan takes 300s
 	def scrape() -> list[ItemTesco]:
-		taxonomy = requests.get("https://nakup.itesco.cz/groceries/cs-CZ/taxonomy", headers=HEADERS).json()
-		categories = [i["url"][1:] for i in taxonomy]
-
 		out_list = []
+
 		try:
+			taxonomy = requests.get("https://nakup.itesco.cz/groceries/cs-CZ/taxonomy", headers=HEADERS).json()
+			categories = [i["url"][1:] for i in taxonomy]
 			for i in tqdm(categories):
 				j = 1
 

@@ -6,10 +6,10 @@ from math import ceil
 
 class ScraperBilla(ScraperBase): # Scan takes 30s
 	def scrape() -> list[ItemBilla]:
-		total = ceil(requests.get("https://shop.billa.cz/api/products?pageSize=0").json()["total"]/500)
 		out_list = []
 
 		try:
+			total = ceil(requests.get("https://shop.billa.cz/api/products?pageSize=0").json()["total"]/500)
 			for i in tqdm(range(total)):
 				resp = requests.get("https://shop.billa.cz/api/products?pageSize=500&page=" + str(i)).json()
 
