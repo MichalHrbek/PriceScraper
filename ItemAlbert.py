@@ -5,9 +5,9 @@ class ItemAlbert(ItemBase):
 	unit_label: str
 	ammount: str
 	net_content: str
-	def __init__(self, item) -> None:
+	def __init__(self, item, category) -> None:
 		self.name = item["name"]
-		self.category = item["url"].split('/')[2]
+		self.category = category
 		self.price = item["price"]["value"]
 		self.store = "albert"
 		self.unit_label = item["price"]["supplementaryPriceLabel1"]

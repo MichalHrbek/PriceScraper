@@ -7,14 +7,17 @@ from math import ceil
 class ScraperAlbert(ScraperBase): # Scan takes 150s
 	def scrape() -> list[ItemAlbert]:
 		out_list = []
-		# I have no idea how persistedQuery works. Some hash is required but you can still change the search parameters. There's no query param to hash so idk where to get the hash
-		gen_url = lambda page_num, page_size: 'https://www.albert.cz/api/v1/?operationName=GetProductSearch&variables={"lang":"cs","searchQuery":"","pageNumber":' + str(page_num) + ',"pageSize":' + str(page_size) + '}&extensions={"persistedQuery":{"version":1,"sha256Hash":"eb2c35d17a491cfbbffd34a91ed26d79a27cbc808fd4849c6edbefe679983718"}}'
-		
 		try:
-			pages = ceil(requests.get(gen_url(0, 1)).json()["data"]["productSearch"]["pagination"]["totalResults"]/50)
-			for i in tqdm(range(pages)):
-				for j in requests.get(gen_url(i, 50)).json()["data"]["productSearch"]["products"]:
-					out_list.append(ItemAlbert(j))
+			categories = requests.get('https://www.albert.cz/api/v1/?operationName=LeftHandNavigationBar&variables={"rootCategoryCode":"","cutOffLevel":"1","lang":"cs"}&extensions={"persistedQuery":{"version":1,"sha256Hash":"29a05b50daa7ab7686d28bf2340457e2a31e1a9e4d79db611fcee435536ee01c"}}').json()["data"]["leftHandNavigationBar"]["levelInfo"]
+			for i in tqdm(categories):
+				category_name = i["url"].split('/')[2]
+				for j in range(ceil(i["productCount"]/50)):
+					# I have no idea how persistedQuery works. Some hash is required but you can still change the search parameters. There's no query param to hash so idk where to get the hash
+					resp = requests.get('https://www.albert.cz/api/v1/?operationName=GetCategoryProductSearch&variables={"lang":"cs","category":"' + i["code"] + '","pageNumber":' + str(j) + ',"pageSize":20,"filterFlag":true,"plainChildCategories":true}&extensions={"persistedQuery":{"version":1,"sha256Hash":"25fdff69c2396b20f500d39cc3e5967a066ee90eb8678e1e264575dfb9433060"}}').json()
+					for k in resp["data"]["categoryProductSearch"]["products"]:
+						if category_name == k["url"].split('/')[2]: # This is to exclude duplicates (may not work)
+							out_list.append(ItemAlbert(k, category_name))
+						
 		except KeyboardInterrupt:
 			pass
 
