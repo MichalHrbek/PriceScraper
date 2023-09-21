@@ -10,10 +10,17 @@ if not os.path.exists("out"):
 	os.makedirs("out")
 
 for s in SCRAPERS:
-	print(s.__name__)
 	start_time = time.time()
-	x = [i.__dict__ for i in s.scrape()]
-	print(int(time.time() - start_time), "seconds")
+	file_name = f"out/{int(start_time)}.{s.__name__}"
 
-	with (gzip.open(f"out/{int(start_time)}.{s.__name__}.json.gz", 'wb') if COMPRESS else open(f"out/{int(start_time)}.{s.__name__}.json", 'wb')) as f:
-		f.write(json.dumps(x, ensure_ascii=False, indent="	").encode())
+	try:
+		print(s.__name__)
+		x = [i.__dict__ for i in s.scrape()]
+		print(int(time.time() - start_time), "seconds")
+
+		with (gzip.open(file_name + ".json.gz", 'wb') if COMPRESS else open(file_name + ".json", 'wb')) as f:
+			f.write(json.dumps(x, ensure_ascii=False, indent="	").encode())
+
+	except Exception as e:
+		with open(file_name + ".error", 'w') as f:
+			f.write(str(e))
