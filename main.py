@@ -22,5 +22,6 @@ for s in SCRAPERS:
 			f.write(json.dumps(x, ensure_ascii=False, indent="	").encode())
 
 	except Exception as e:
+		print(e)
 		with open(file_name + ".error", 'w') as f:
 			f.write(str(e))
