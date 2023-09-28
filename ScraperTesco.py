@@ -48,8 +48,8 @@ class ScraperTesco(ScraperBase): # Scan takes 300s
 							break
 						else:
 							print("error")
-						
-					
+
+
 					j += 1
 		except KeyboardInterrupt:
 			pass

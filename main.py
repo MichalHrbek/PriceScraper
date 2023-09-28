@@ -3,7 +3,7 @@ from ScraperBilla import ScraperBilla
 from ScraperAlbert import ScraperAlbert
 import json, time, os, gzip
 
-COMPRESS = False
+COMPRESS = True
 SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla] # Takes about 8 minutes to complete on my system
 
 if not os.path.exists("out"):

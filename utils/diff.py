@@ -18,8 +18,8 @@ if __name__== "__main__":
             if(len(d) != 0):
                 print(df1[i][IDS[df1[i]["store"]]], d)
         else:
-            print("Item from 1st file not in 2nd file", df1[i][IDS[df1[i]["store"]]])
+            print("[-]", df1[i][IDS[df1[i]["store"]]])
     
     for i in df2:
         if i not in df1:
-            print("Item from 2nd file not in 1st file", df2[i][IDS[df2[i]["store"]]])
+            print("[+]", df2[i][IDS[df2[i]["store"]]])
