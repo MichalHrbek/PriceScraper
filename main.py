@@ -1,7 +1,7 @@
 from ScraperTesco import ScraperTesco
 from ScraperBilla import ScraperBilla
 from ScraperAlbert import ScraperAlbert
-import json, time, os, gzip
+import json, time, os, gzip, traceback
 
 COMPRESS = True
 SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla] # Takes about 8 minutes to complete on my system
@@ -22,6 +22,6 @@ for s in SCRAPERS:
 			f.write(json.dumps(x, ensure_ascii=False, indent="	").encode())
 
 	except Exception as e:
-		print(e)
+		print(traceback.format_exc())
 		with open(file_name + ".error", 'w') as f:
-			f.write(str(e))
+			f.write(traceback.format_exc())
