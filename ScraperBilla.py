@@ -13,6 +13,9 @@ class ScraperBilla(ScraperBase): # Scan takes 30s
 			for i in tqdm(range(total)):
 				resp = requests.get("https://shop.billa.cz/api/products?pageSize=500&page=" + str(i)).json()
 
+				if "results" not in resp:
+					raise Exception(f"Error on URL https://shop.billa.cz/api/products?pageSize=500&page={i}\n{resp}")
+
 				for j in resp["results"]:
 					out_list.append(ItemBilla(j))
 		except KeyboardInterrupt:
