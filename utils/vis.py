@@ -87,15 +87,15 @@ class InfoWindow:
 		self.root.grid_columnconfigure(1, weight=1)
 		self.root.grid_columnconfigure(2, weight=1)
 
-		self.overview = Listbox(self.root, selectmode=SINGLE, exportselection=False)
+		self.overview = Listbox(self.root, selectmode=BROWSE, exportselection=False)
 		self.overview.grid(row=0, column=0, sticky=NSEW)
 		self.overview.bind("<<ListboxSelect>>", self.on_select_overview)
 
-		self.itemlist = Listbox(self.root, selectmode=SINGLE, exportselection=False)
+		self.itemlist = Listbox(self.root, selectmode=BROWSE, exportselection=False)
 		self.itemlist.grid(row=0, column=1, sticky=NSEW)
 		self.itemlist.bind("<<ListboxSelect>>", self.on_select_item)
 
-		self.iteminfo = Listbox(self.root, selectmode=SINGLE, exportselection=False)
+		self.iteminfo = Listbox(self.root, selectmode=EXTENDED, exportselection=False)
 		self.iteminfo.grid(row=0, column=2, sticky=NSEW)
 		self.iteminfo.bind("<<ListboxSelect>>", self.on_select_info)
 
@@ -120,7 +120,9 @@ class InfoWindow:
 			self.iteminfo.insert(END, f'{i}: {item[i]}')
 	
 	def on_select_info(self, event):
-		self.clipboard = self.iteminfo.get(self.iteminfo.curselection()[0])
+		self.clipboard = ""
+		for i in self.iteminfo.curselection():
+			self.clipboard += self.iteminfo.get(i) + "\n"
 
 	def copy_to_clipboard(self):
 		self.root.clipboard_clear()
