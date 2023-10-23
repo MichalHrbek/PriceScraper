@@ -10,3 +10,12 @@
 - All stores share these properties: name, price, category
 - Different stores have different properties but they are mostly id/slug/url and unit price
 - Std out shows the progress
+
+## Working with the data
+### GUI with mass plotting and search
+- `python3 utils/vis.py path`
+- Use a unix style path ex. `out/*Albert.json`
+- Requires `matplotlib`
+### A diff tool
+- `python3 utils/diff.py file1 file2`
+- Requires `deepdiff`
