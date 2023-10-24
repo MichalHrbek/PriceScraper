@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import datetime
 
-IDS = {"billa": "slug", "albert": "url", "tesco": "id"}
-
 def item_to_str(item: list[dict]) -> str:
 	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}'
 
@@ -140,13 +138,11 @@ if __name__== "__main__":
 
 	db: dict[str,list[dict]] = {}
 	for i in filepaths:
-		ts = datetime.datetime.fromtimestamp(int(i.split('\\' if ("\\" in i) else '/')[-1].split('.')[0])) # The file should be named timestamp.storename.json
 		for j in json.loads(open(i).read()):
-			j["timestamp"] = ts
-			id = j[IDS[j["store"]]]
-			if id in db:
-				db[id].append(j)
+			j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
+			if j["id"] in db:
+				db[j["id"]].append(j)
 			else:
-				db[id] = [j]
+				db[j["id"]] = [j]
 
 	sw = SelectWindow()

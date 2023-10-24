@@ -3,3 +3,5 @@ class ItemBase:
 	category: str
 	price: float
 	store: str
+	id: str
+	timestamp: int

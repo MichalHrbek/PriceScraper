@@ -7,8 +7,8 @@
 
 ## Output
 - Output files are stored in the `out` folder in this format: `{time}.{store}.json.gz`
-- All stores share these properties: name, price, category
-- Different stores have different properties but they are mostly id/slug/url and unit price
+- All stores share these properties: name, price, category, id, timestamp
+- Different stores have different properties but they are mostly the unit price and ammount/weight
 - Std out shows the progress
 
 ## Working with the data
