@@ -5,7 +5,7 @@ import matplotlib.dates as mdates
 import datetime
 
 def item_to_str(item: list[dict]) -> str:
-	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}'
+	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}' + ('' if all([i["price"] == item[0]["price"] for i in item]) else ', X')
 
 class SelectWindow:
 	def __init__(self) -> None:
