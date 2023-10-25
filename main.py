@@ -4,7 +4,7 @@ from ScraperAlbert import ScraperAlbert
 import json, time, os, gzip, traceback
 
 COMPRESS = True
-SCRAPERS = [ScraperAlbert]#, ScraperTesco, ScraperBilla] # Takes about 8 minutes to complete on my system
+SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla] # Takes about 8 minutes to complete on my system
 
 if not os.path.exists("out"):
 	os.makedirs("out")
