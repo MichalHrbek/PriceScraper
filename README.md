@@ -19,3 +19,7 @@
 ### A diff tool
 - `python3 utils/diff.py file1 file2`
 - Requires `deepdiff`
+
+<img src="https://michalhrbek.github.io/images/pricescraper/list.png" width=920>
+<img src="https://michalhrbek.github.io/images/pricescraper/graph.png" width=920>
+<img src="https://michalhrbek.github.io/images/pricescraper/info.png" width=920>
