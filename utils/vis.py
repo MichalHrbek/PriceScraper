@@ -1,8 +1,9 @@
 from tkinter import *
-import json, glob, sys
+import json, glob, sys, datetime, random
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import datetime
+
+JITTER = 0
 
 def item_to_str(item: list[dict]) -> str:
 	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}' + ('' if all([i["price"] == item[0]["price"] for i in item]) else ', X')
@@ -64,7 +65,8 @@ class GraphWindow:
 		plt.gca().xaxis.set_major_locator(mdates.DayLocator())
 		
 		for i in items:
-			plt.plot([j["timestamp"] for j in i],[j["price"] for j in i], marker='o')
+			offset = random.uniform(-JITTER, JITTER)
+			plt.plot([j["timestamp"] for j in i],[j["price"]+offset for j in i], marker='o')
 		
 		plt.gcf().autofmt_xdate()
 		plt.legend([i[-1]["name"] for i in items])
