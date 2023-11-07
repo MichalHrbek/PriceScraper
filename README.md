@@ -15,7 +15,7 @@
 ### GUI with mass plotting and search
 - `python3 utils/vis.py path`
 - Use a unix style path ex. `out/*Albert.json`
-- Requires `matplotlib`
+- Requires `bokeh`
 ### A diff tool
 - `python3 utils/diff.py file1 file2`
 - Requires `deepdiff`

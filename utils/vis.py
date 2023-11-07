@@ -1,7 +1,9 @@
 from tkinter import *
-import json, glob, sys, datetime, random
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import json, glob, sys, datetime
+from bokeh.plotting import figure, show
+from bokeh.models import HoverTool, TapTool
+from collections import defaultdict
+from bokeh.palettes import Viridis6
 
 JITTER = 0
 
@@ -61,16 +63,32 @@ class SelectWindow:
 
 class GraphWindow:
 	def __init__(self, items) -> None:
-		plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d.%m')) # '%d.%m.%Y'
-		plt.gca().xaxis.set_major_locator(mdates.DayLocator())
-		
+		spec = defaultdict(list)
+		spec['color'] = Viridis6
 		for i in items:
-			offset = random.uniform(-JITTER, JITTER)
-			plt.plot([j["timestamp"] for j in i],[j["price"]+offset for j in i], marker='o')
+			spec["timestamp"].append([[j["timestamp"]] for j in i])
+			spec["price"].append([[j["price"]] for j in i])
+			spec["name"].append(i[-1]["name"])
+		hover_opts = dict(
+			tooltips=[('Name', '@name')],
+			show_arrow=False,
+			line_policy='next',
+		)
+		'''line_opts = dict(
+			line_width=5, line_color='color', line_alpha=0.6,
+			hover_line_color='color', hover_line_alpha=1.0,
+			source=spec,
+		)'''
+		line_opts = dict(
+			line_width=5, line_alpha=0.6, hover_line_alpha=1.0,
+			source=spec,
+		)
+
+		p = figure(x_axis_label='x', y_axis_label='y', tools=[HoverTool(**hover_opts), TapTool()])
+		p.sizing_mode = 'scale_height'
+		p.multi_line(xs="timestamp", ys="price", legend_field="name", **line_opts)
 		
-		plt.gcf().autofmt_xdate()
-		plt.legend([i[-1]["name"] for i in items])
-		plt.show()
+		show(p)
 
 class InfoWindow:
 	def __init__(self, items) -> None:
