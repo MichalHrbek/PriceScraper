@@ -1,11 +1,7 @@
 from tkinter import *
 import json, glob, sys, datetime
-from bokeh.plotting import figure, show
-from bokeh.models import HoverTool, TapTool
-from collections import defaultdict
-from bokeh.palettes import Viridis6
-
-JITTER = 0
+from utils.graph.create_graph import create_graph
+from bokeh.plotting import show
 
 def item_to_str(item: list[dict]) -> str:
 	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}' + ('' if all([i["price"] == item[0]["price"] for i in item]) else ', X')
@@ -63,30 +59,7 @@ class SelectWindow:
 
 class GraphWindow:
 	def __init__(self, items) -> None:
-		spec = defaultdict(list)
-		spec['color'] = Viridis6
-		for i in items:
-			spec["timestamp"].append([[j["timestamp"]] for j in i])
-			spec["price"].append([[j["price"]] for j in i])
-			spec["name"].append(i[-1]["name"])
-		hover_opts = dict(
-			tooltips=[('Name', '@name')],
-			show_arrow=False,
-			line_policy='next',
-		)
-		'''line_opts = dict(
-			line_width=5, line_color='color', line_alpha=0.6,
-			hover_line_color='color', hover_line_alpha=1.0,
-			source=spec,
-		)'''
-		line_opts = dict(
-			line_width=5, line_alpha=0.6, hover_line_alpha=1.0,
-			source=spec,
-		)
-
-		p = figure(x_axis_label='x', y_axis_label='y', tools=[HoverTool(**hover_opts), TapTool()])
-		p.sizing_mode = 'scale_height'
-		p.multi_line(xs="timestamp", ys="price", legend_field="name", **line_opts)
+		p = create_graph(items)
 		
 		show(p)
 
