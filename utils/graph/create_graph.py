@@ -1,5 +1,5 @@
-from bokeh.plotting import figure, show
-from bokeh.models import HoverTool, TapTool, WheelZoomTool, PanTool
+from bokeh.plotting import figure
+from bokeh.models import HoverTool, TapTool, WheelZoomTool, PanTool, FullscreenTool
 from bokeh.palettes import Viridis6
 from collections import defaultdict
 
@@ -11,12 +11,14 @@ def create_graph(items):
 		spec["timestamp"].append([[j["timestamp"]] for j in i])
 		spec["price"].append([[j["price"]] for j in i])
 		spec["name"].append(i[-1]["name"])
+		spec["store"].append(i[-1]["store"])
 	
 	hover_opts = dict(
 		tooltips=[
 			("Name", "@name"),
 			("Date", "$snap_x{%F}"),
-			("Prize", "$snap_y")
+			("Prize", "$snap_y"),
+			("Store", "@store"),
 			],
 		formatters={
 			"$snap_x": "datetime"
@@ -36,12 +38,13 @@ def create_graph(items):
 		HoverTool(**hover_opts),
 		TapTool(),
 		WheelZoomTool(),
-		PanTool()
+		PanTool(),
+		FullscreenTool(),
 		]
 
 	p = figure(x_axis_label='x', y_axis_label='y', tools=tools, x_axis_type="datetime")
 	p.multi_line(xs="timestamp", ys="price", **line_opts)
-	p.sizing_mode = "scale_width"
+	p.sizing_mode = "stretch_both"
 	p.legend.location = "center"
 
 	p.add_layout(p.legend[0], 'right')

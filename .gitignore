@@ -1,5 +1,6 @@
 out/
 utils/vis.html
+utils/graph/static/items.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
