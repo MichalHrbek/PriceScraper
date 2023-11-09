@@ -1,4 +1,4 @@
-import json, glob, datetime, data, os
+import json, glob, datetime, data, os, gzip
 
 def item_to_str(item: list[dict]) -> str:
 	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}' + ('' if all([i["price"] == item[0]["price"] for i in item]) else ', X')
@@ -6,8 +6,8 @@ def item_to_str(item: list[dict]) -> str:
 def on_server_loaded(server_context):
 	db = {}
 	print("Loading...")
-	for i in glob.glob("out/*json"):
-		for j in json.loads(open(i).read()):
+	for i in glob.glob("out/*\.json*"):
+		for j in json.loads(gzip.open(i).read() if i.endswith(".gz") else open(i).read()):
 			j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
 			if j["id"] in db:
 				db[j["id"]].append(j)
