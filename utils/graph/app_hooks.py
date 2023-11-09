@@ -6,7 +6,7 @@ def item_to_str(item: list[dict]) -> str:
 def on_server_loaded(server_context):
 	db = {}
 	print("Loading...")
-	for i in glob.glob("out/*\.json*"):
+	for i in glob.glob("out/*json*"):
 		for j in json.loads(gzip.open(i).read() if i.endswith(".gz") else open(i).read()):
 			j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
 			if j["id"] in db:
