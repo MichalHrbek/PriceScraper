@@ -8,22 +8,24 @@ def create_graph(items):
 	spec["color"] = (Viridis6 * (len(items)//len(Viridis6)+1))[:len(items)]
 	
 	for i in items:
-		spec["timestamp"].append([[j["timestamp"]] for j in i])
-		spec["price"].append([[j["price"]] for j in i])
+		spec["timestamp"].append([j["timestamp"] for j in i])
+		spec["price"].append([j["price"] for j in i])
 		spec["name"].append(i[-1]["name"])
 		spec["store"].append(i[-1]["store"])
+		spec["category"].append(i[-1]["category"])
 	
 	hover_opts = dict(
 		tooltips=[
 			("Name", "@name"),
 			("Date", "$snap_x{%F}"),
 			("Prize", "$snap_y"),
+			("Category", "@category"),
 			("Store", "@store"),
 			],
 		formatters={
 			"$snap_x": "datetime"
 		},
-		show_arrow=False,
+		show_arrow=True,
 		line_policy="nearest",
 	)
 
