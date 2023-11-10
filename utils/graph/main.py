@@ -12,7 +12,7 @@ else:
 	if "ids[]" in curdoc().session_context.request.arguments:
 		for i in curdoc().session_context.request.arguments["ids[]"]:
 			try:
-				items.append(db[i.decode()])
+				items.append(sorted(db[i.decode()], key=lambda i: i["timestamp"]))
 			except KeyError:
 				print(i, "not found")
 
