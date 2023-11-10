@@ -1,5 +1,5 @@
 from bokeh.plotting import figure
-from bokeh.models import HoverTool, TapTool, WheelZoomTool, PanTool, FullscreenTool
+from bokeh.models import HoverTool, TapTool, WheelZoomTool, PanTool, FullscreenTool, SaveTool
 from bokeh.palettes import Viridis6
 from collections import defaultdict
 
@@ -42,6 +42,7 @@ def create_graph(items):
 		WheelZoomTool(),
 		PanTool(),
 		FullscreenTool(),
+		SaveTool(),
 		]
 
 	p = figure(x_axis_label='x', y_axis_label='y', tools=tools, x_axis_type="datetime")
