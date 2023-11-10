@@ -1,6 +1,6 @@
 from tkinter import *
 import json, glob, sys, datetime
-from utils.graph.create_graph import create_graph
+from graph.create_graph import create_graph
 from bokeh.plotting import show
 
 def item_to_str(item: list[dict]) -> str:
