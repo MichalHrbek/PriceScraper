@@ -8,7 +8,7 @@ def on_server_loaded(server_context):
 	print("Loading...")
 	for i in glob.glob("out/*json*"):
 		for j in json.loads(gzip.open(i).read() if i.endswith(".gz") else open(i).read()):
-			j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
+			j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"]) # .replace(second = 0, minute = 0, microsecond = 0)
 			if j["id"] in db:
 				db[j["id"]].append(j)
 			else:
