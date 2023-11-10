@@ -33,7 +33,7 @@
 		var sel = document.querySelectorAll("option:checked");
 		var url = "/graph?graph"
 		sel.forEach(element => {
-			url += "&ids[]=" + encodeURIComponent(uriEelement.getAttribute("data-id"))
+			url += "&ids[]=" + encodeURIComponent(element.getAttribute("data-id"))
 		});
 		window.location = url
 	}
