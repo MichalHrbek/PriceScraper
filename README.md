@@ -23,3 +23,9 @@
 <img src="https://michalhrbek.github.io/images/pricescraper/list.png" width=920>
 <img src="https://michalhrbek.github.io/images/pricescraper/bokeh_plot.png" width=920>
 <img src="https://michalhrbek.github.io/images/pricescraper/info.png" width=920>
+
+## TODO
+### Graph
+- Fix legend entries with the same name merging
+- Handle overlapping lines better
+- Highlight data points
