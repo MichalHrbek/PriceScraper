@@ -1,6 +1,8 @@
 out/
-utils/vis.html
-utils/graph/static/items.json
+src/utils/vis.html
+src/utils/graph/static/items.json
+db/Items.db
+db/Items.db-journal
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,10 +1,14 @@
 from tkinter import *
-import json, glob, sys, datetime
 from graph.create_graph import create_graph
 from bokeh.plotting import show
+from graph.data import *
+import datetime
 
-def item_to_str(item: list[dict]) -> str:
-	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}' + ('' if all([i["price"] == item[0]["price"] for i in item]) else ', X')
+start()
+all_items = getAllItems()
+
+def item_to_str(item) -> str:
+	return f'{item["Name"]}, {item["Price"]} CZK, {item["Shop"]}'
 
 class SelectWindow:
 	def __init__(self) -> None:
@@ -19,7 +23,7 @@ class SelectWindow:
 		self.listbox = Listbox(self.root, selectmode=EXTENDED)
 		self.listbox.pack(pady=10, fill=BOTH, expand=YES)
 
-		self.update(db.values())
+		self.update(all_items)
 
 		self.entry_box.bind("<KeyRelease>", self.check)
 
@@ -32,10 +36,10 @@ class SelectWindow:
 		self.root.mainloop()
 
 	def make_graph(self):
-		GraphWindow([self.itemlist[i] for i in self.listbox.curselection()])
+		GraphWindow([self.itemlist[i]["Id"] for i in self.listbox.curselection()])
 	
 	def make_info(self):
-		InfoWindow([self.itemlist[i] for i in self.listbox.curselection()])
+		InfoWindow([self.itemlist[i]["Id"] for i in self.listbox.curselection()])
 
 	def update(self, data):
 		self.itemlist = []
@@ -49,23 +53,27 @@ class SelectWindow:
 		typed = self.entry_box.get()
 
 		if typed == '':
-			data = db.values()
+			data = all_items
 		else:
 			data = []
-			for items in db.values():
-				if typed.lower() in items[0]["name"].lower():
+			for items in all_items:
+				if typed.lower() in items["Name"].lower():
 					data.append(items)
 		self.update(data)
 
 class GraphWindow:
-	def __init__(self, items) -> None:
+	def __init__(self, ids) -> None:
+		items = [getItemList(i) for i in ids]
 		p = create_graph(items)
 		
 		show(p)
 
 class InfoWindow:
-	def __init__(self, items) -> None:
-		self.items = items
+	def __init__(self, ids) -> None:
+		self.items = [getItemList(i) for i in ids]
+		for i in self.items:
+			for j in i:
+				j["RecordTimeStamp"] = datetime.datetime.fromtimestamp(j["RecordTimeStamp"])
 		self.clipboard = ""
 
 		self.root = Tk()
@@ -82,31 +90,30 @@ class InfoWindow:
 		self.overview.grid(row=0, column=0, sticky=NSEW)
 		self.overview.bind("<<ListboxSelect>>", self.on_select_overview)
 
-		self.itemlist = Listbox(self.root, selectmode=BROWSE, exportselection=False)
-		self.itemlist.grid(row=0, column=1, sticky=NSEW)
-		self.itemlist.bind("<<ListboxSelect>>", self.on_select_item)
+		self.item_box = Listbox(self.root, selectmode=BROWSE, exportselection=False)
+		self.item_box.grid(row=0, column=1, sticky=NSEW)
+		self.item_box.bind("<<ListboxSelect>>", self.on_select_item)
 
 		self.iteminfo = Listbox(self.root, selectmode=EXTENDED, exportselection=False)
 		self.iteminfo.grid(row=0, column=2, sticky=NSEW)
 		self.iteminfo.bind("<<ListboxSelect>>", self.on_select_info)
 
 		self.overview.delete(0, END)
-		for item in self.items:
-			self.overview.insert(END, item_to_str(item))
+		for i in self.items:
+			self.overview.insert(END, item_to_str(i[0]))
 
 		self.root.mainloop()
 
-
 	def on_select_overview(self, event):
 		self.clipboard = self.overview.get(self.overview.curselection()[0])
-		self.itemlist.delete(0, END)
+		self.item_box.delete(0, END)
 		for item in self.items[self.overview.curselection()[0]]:
-			self.itemlist.insert(END, item["timestamp"])
+			self.item_box.insert(END, item["RecordTimeStamp"])
 	
 	def on_select_item(self, event):
-		self.clipboard = self.itemlist.get(self.itemlist.curselection()[0])
+		self.clipboard = self.item_box.get(self.item_box.curselection()[0])
 		self.iteminfo.delete(0, END)
-		item = self.items[self.overview.curselection()[0]][self.itemlist.curselection()[0]]
+		item = self.items[self.overview.curselection()[0]][self.item_box.curselection()[0]]
 		for i in item:
 			self.iteminfo.insert(END, f'{i}: {item[i]}')
 	
@@ -119,23 +126,5 @@ class InfoWindow:
 		self.root.clipboard_clear()
 		self.root.clipboard_append(self.clipboard)
 		self.root.update()
-		
 
-if __name__== "__main__":
-	filepaths = []
-	for i in sys.argv[1:]:
-		for j in glob.glob(i):
-			filepaths.append(j)
-	
-	# print(filepaths)
-
-	db: dict[str,list[dict]] = {}
-	for i in filepaths:
-		for j in json.loads(open(i).read()):
-			j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
-			if j["id"] in db:
-				db[j["id"]].append(j)
-			else:
-				db[j["id"]] = [j]
-
-	sw = SelectWindow()
+sw = SelectWindow()

@@ -6,14 +6,13 @@ import data
 if "reload" in curdoc().session_context.request.arguments:
 	on_server_loaded(None)
 else:
-	db = data.get()
 	items = []
 	
 	if "ids[]" in curdoc().session_context.request.arguments:
 		for i in curdoc().session_context.request.arguments["ids[]"]:
 			try:
-				items.append(sorted(db[i.decode()], key=lambda i: i["timestamp"]))
+				items.append(data.getItemList(int(i)))
 			except KeyError:
 				print(i, "not found")
 
-		curdoc().add_root(create_graph(items))
+	curdoc().add_root(create_graph(items))

@@ -10,7 +10,8 @@ class ItemTesco(ItemBase):
 		self.category = item["departmentName"]
 		self.price = item["price"]
 		self.store = "tesco"
-		self.id = str(item["id"]) # https://nakup.itesco.cz/groceries/cs-CZ/products/{id}
+		self.id = int(item["id"])
+		self.url = "https://nakup.itesco.cz/groceries/cs-CZ/products/" + str(item["id"])
 		self.timestamp = int(datetime.datetime.now().timestamp()) if timestamp == None else timestamp
 		self.unit_price = item["unitPrice"]
 		self.unit_type = item["unitOfMeasure"]
