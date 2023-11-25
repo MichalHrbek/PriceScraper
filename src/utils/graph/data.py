@@ -10,7 +10,7 @@ def start():
 	if not opened:
 		print("Opening")
 		connection = sqlite3.connect("db/Items.db")
-		# connection.row_factory = sqlite3.Row
+		connection.row_factory = sqlite3.Row
 		opened = True
 
 def end():
@@ -93,5 +93,5 @@ def addMultiple(items):
 def getAllItems():
 	with closing(connection.cursor()) as cur:
 		cur.execute("SELECT Id, Name, Price, Shop, MIN(RecordTimeStamp) FROM Items GROUP BY Id;")
-		items = [{"Id": i[0], "Name": i[1], "Price": i[2], "Shop": i[3]} for i in cur.fetchall()]
+		items = cur.fetchall()
 		return items
