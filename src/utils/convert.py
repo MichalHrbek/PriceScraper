@@ -16,6 +16,10 @@ for i in filepaths:
 		if j["store"] == "albert":
 			j["url"] = "https://www.albert.cz" + j["id"]
 			j["id"] = int(j["id"].split("/")[-1])
+			if j["unit_label"] != None:
+				s = j["unit_label"].split()
+				j["unit_price"] = float(s[3].replace(",", "."))
+				j["unit_type"] = s[1]
 		elif j["store"] == "billa":
 			j["url"] = "https://shop.billa.cz/produkt/" + j["id"]
 			j["id"] = int(j["id"].split("-")[-1])
@@ -37,6 +41,7 @@ CONV = {
 }
 
 for i in tqdm.tqdm(db):
-	addMultiple([{CONV[a]:o[a] for a in o if a in CONV} for o in db[i]])
+	addMultipleRecords([{CONV[a]:o[a] for a in o if a in CONV} for o in db[i]])
 
+commit()
 end()

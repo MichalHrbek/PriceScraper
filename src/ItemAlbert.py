@@ -10,6 +10,7 @@ class ItemAlbert(ItemBase):
 		self.id = int(item["url"].split("/")[-1])
 		self.url = "https://www.albert.cz" + item["url"]
 		self.timestamp = int(datetime.datetime.now().timestamp()) if timestamp == None else timestamp
-		s = item["price"]["supplementaryPriceLabel1"].split()
-		self.unit_price = float(s[3])
-		self.unit_type = s[1]
+		if item["price"]["supplementaryPriceLabel1"] != None:
+			s = item["price"]["supplementaryPriceLabel1"].split()
+			self.unit_price = float(s[3].replace(",", "."))
+			self.unit_type = s[1]

@@ -26,7 +26,10 @@ def create():
 		with closing(connection.cursor()) as cur:
 			cur.execute(f.read())
 	end()
-		
+
+def commit():
+	if opened:
+		connection.commit()
 
 def getConnection() -> sqlite3.Connection:
 	if opened:
@@ -57,7 +60,24 @@ def getItemList(id: int):
 	return l
 
 def getItemLast(id: int):
-	return getItemList(id)[-1]
+	with closing(connection.cursor()) as cur:
+		cur.execute("""
+				SELECT * from Items
+				WHERE Id=(?)
+				ORDER BY RecordTimeStamp DESC;
+				""", (id,))
+		o = defaultdict(lambda: None)
+		end = False
+		while not end:
+			c = cur.fetchone()
+			if c == None:
+				break
+			end = True
+			for i in PROPS:
+				if o[i] == None:
+					o[i] = c[i]
+					end = False
+		return o
 
 def addItem(item):
 	with closing(connection.cursor()) as cur:
@@ -71,9 +91,9 @@ def addItem(item):
 					INSERT INTO Items (Id,RecordTimeStamp,Price,Name,Shop,Category,UnitPrice,UnitType,Url)
 					VALUES (:Id,:RecordTimeStamp,:Price,:Name,:Shop,:Category,:UnitPrice,:UnitType,:Url);
 					""", item)
-		connection.commit()
+		# connection.commit()
 
-def addMultiple(items):
+def addMultipleRecords(items):
 	with closing(connection.cursor()) as cur:
 		items.sort(key=lambda i: i["RecordTimeStamp"])
 		last = getItemLast(items[0]["Id"])
@@ -88,7 +108,22 @@ def addMultiple(items):
 				INSERT INTO Items (Id,RecordTimeStamp,Price,Name,Shop,Category,UnitPrice,UnitType,Url)
 				VALUES (:Id,:RecordTimeStamp,:Price,:Name,:Shop,:Category,:UnitPrice,:UnitType,:Url);
 				""", o)
-		connection.commit()
+		# connection.commit()
+
+def addMultipleItems(items):
+	with closing(connection.cursor()) as cur:
+		for item in items:
+			last = getItemLast(item["Id"])
+			o = defaultdict(lambda: None)
+			o["Id"] = item["Id"]
+			for i in item:
+				if (item[i] != last[i]):
+					o[i] = item[i]
+			cur.execute("""
+						INSERT INTO Items (Id,RecordTimeStamp,Price,Name,Shop,Category,UnitPrice,UnitType,Url)
+						VALUES (:Id,:RecordTimeStamp,:Price,:Name,:Shop,:Category,:UnitPrice,:UnitType,:Url);
+						""", item)
+		# connection.commit()
 
 def getAllItems():
 	with closing(connection.cursor()) as cur:

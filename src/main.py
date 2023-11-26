@@ -2,12 +2,14 @@ from ScraperTesco import ScraperTesco
 from ScraperBilla import ScraperBilla
 from ScraperAlbert import ScraperAlbert
 import json, time, os, gzip, traceback
+from utils.graph.data import start, end, commit, addItem, addMultipleItems, addMultipleRecords
 
-COMPRESS = True
-SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla] # Takes about 8 minutes to complete on my system
+SCRAPERS = [ScraperBilla] # Takes about 8 minutes to complete on my system
 
 if not os.path.exists("out"):
 	os.makedirs("out")
+
+start()
 
 for s in SCRAPERS:
 	start_time = time.time()
@@ -15,13 +17,18 @@ for s in SCRAPERS:
 
 	try:
 		print(s.__name__)
-		x = [i.__dict__ for i in s.scrape()]
+		x = [i.toDict() for i in s.scrape()]
+		print("a")
 		print(int(time.time() - start_time), "seconds")
-
-		with (gzip.open(file_name + ".json.gz", 'wb') if COMPRESS else open(file_name + ".json", 'wb')) as f:
-			f.write(json.dumps(x, ensure_ascii=False, indent="	").encode())
+		print("b")
+		addMultipleItems(x)
+		print("c")
+		commit()
+		print("d")	
 
 	except Exception as e:
 		print(traceback.format_exc())
 		with open(file_name + ".error", 'w') as f:
 			f.write(traceback.format_exc())
+
+end()
