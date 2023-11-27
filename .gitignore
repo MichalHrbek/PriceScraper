@@ -1,8 +1,8 @@
 out/
 src/utils/vis.html
 src/utils/graph/static/items.json
-db/Items.db
-db/Items.db-journal
+db/prices.sqlite
+db/prices.sqlite-journal
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
