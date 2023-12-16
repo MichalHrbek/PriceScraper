@@ -1,5 +1,5 @@
 from tkinter import *
-import json, glob, sys, datetime
+import json, glob, sys, datetime, gzip
 from graph.create_graph import create_graph
 from bokeh.plotting import show
 
@@ -122,7 +122,7 @@ class InfoWindow:
 		
 
 if __name__== "__main__":
-	filepaths = []
+	filepaths: list[str] = []
 	for i in sys.argv[1:]:
 		for j in glob.glob(i):
 			filepaths.append(j)
@@ -131,11 +131,12 @@ if __name__== "__main__":
 
 	db: dict[str,list[dict]] = {}
 	for i in filepaths:
-		for j in json.loads(open(i).read()):
-			j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
-			if j["id"] in db:
-				db[j["id"]].append(j)
-			else:
-				db[j["id"]] = [j]
+		with (gzip.open(i) if i.endswith(".gz") else open(i)) as f:
+			for j in json.loads(f.read()):
+				j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
+				if j["id"] in db:
+					db[j["id"]].append(j)
+				else:
+					db[j["id"]] = [j]
 
 	sw = SelectWindow()
