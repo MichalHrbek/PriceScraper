@@ -2,13 +2,15 @@ from bokeh.plotting import figure
 from bokeh.models import HoverTool, TapTool, WheelZoomTool, PanTool, FullscreenTool, SaveTool
 from bokeh.palettes import Viridis6
 from collections import defaultdict
+from datetime import datetime
+
 
 def create_graph(items):
 	spec = defaultdict(list)
 	spec["color"] = (Viridis6 * (len(items)//len(Viridis6)+1))[:len(items)]
 	
 	for i in items:
-		spec["timestamp"].append([j["timestamp"] for j in i])
+		spec["timestamp"].append([datetime.fromtimestamp(j["timestamp"]) for j in i])
 		spec["price"].append([j["price"] for j in i])
 		spec["name"].append(i[-1]["name"])
 		spec["store"].append(i[-1]["store"])

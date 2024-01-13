@@ -3,11 +3,10 @@ from ItemBilla import ItemBilla
 import requests
 from tqdm import tqdm
 from math import ceil
+from DataManager import append_record
 
 class ScraperBilla(ScraperBase): # Scan takes 30s
-	def scrape() -> list[ItemBilla]:
-		out_list = []
-
+	def scrape():
 		try:
 			total = ceil(requests.get("https://shop.billa.cz/api/products?pageSize=0").json()["total"]/500)
 			for i in tqdm(range(total)):
@@ -17,8 +16,6 @@ class ScraperBilla(ScraperBase): # Scan takes 30s
 					raise Exception(f"Error on URL https://shop.billa.cz/api/products?pageSize=500&page={i}\n{resp}")
 
 				for j in resp["results"]:
-					out_list.append(ItemBilla(j))
+					append_record(ItemBilla(j).__dict__)
 		except KeyboardInterrupt:
 			pass
-
-		return out_list

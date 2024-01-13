@@ -3,5 +3,8 @@ class ItemBase:
 	category: str
 	price: float
 	store: str
-	id: str
+	id: int
 	timestamp: int
+	unit_price: float
+	unit_type: str
+	url: str

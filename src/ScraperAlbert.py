@@ -3,10 +3,10 @@ from ItemAlbert import ItemAlbert
 import requests
 from tqdm import tqdm
 from math import ceil
+from DataManager import append_record
 
 class ScraperAlbert(ScraperBase): # Scan takes 150s
-	def scrape() -> list[ItemAlbert]:
-		out_list = []
+	def scrape():
 		try:
 			categories = requests.get('https://www.albert.cz/api/v1/?operationName=LeftHandNavigationBar&variables={"rootCategoryCode":"","cutOffLevel":"1","lang":"cs"}&extensions={"persistedQuery":{"version":1,"sha256Hash":"29a05b50daa7ab7686d28bf2340457e2a31e1a9e4d79db611fcee435536ee01c"}}').json()["data"]["leftHandNavigationBar"]["levelInfo"]
 			for i in tqdm(categories):
@@ -19,9 +19,7 @@ class ScraperAlbert(ScraperBase): # Scan takes 150s
 						raise Exception("Invalid response: " + str(resp))
 					for k in resp["data"]["categoryProductSearch"]["products"]:
 						if category_url == k["url"].split('/')[2]: # This is to exclude duplicates. Tell me if you know of a better way to do this
-							out_list.append(ItemAlbert(k, category_name))
+							append_record(ItemAlbert(k, category_name).__dict__)
 
 		except KeyboardInterrupt:
 			pass
-
-		return out_list

@@ -2,6 +2,7 @@ from ScraperBase import ScraperBase
 from ItemTesco import ItemTesco
 import requests
 from tqdm import tqdm
+from DataManager import append_record
 
 HEADERS = {
 	"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/114.0",
@@ -12,9 +13,7 @@ HEADERS = {
 }
 
 class ScraperTesco(ScraperBase): # Scan takes 300s
-	def scrape() -> list[ItemTesco]:
-		out_list = []
-
+	def scrape():
 		try:
 			taxonomy = requests.get("https://nakup.itesco.cz/groceries/cs-CZ/taxonomy", headers=HEADERS).json()
 			categories = [i["url"][1:] for i in taxonomy]
@@ -42,7 +41,7 @@ class ScraperTesco(ScraperBase): # Scan takes 300s
 					if resp.ok:
 						item_list = resp.json()["productsByCategory"]["data"]["results"]["productItems"]
 						for k in item_list:
-							out_list.append(ItemTesco(k["product"]))
+							append_record(ItemTesco(k["product"]).__dict__)
 					else:
 						if resp.text.strip() == "{}":
 							break
@@ -53,5 +52,3 @@ class ScraperTesco(ScraperBase): # Scan takes 300s
 					j += 1
 		except KeyboardInterrupt:
 			pass
-
-		return out_list

@@ -1,27 +1,23 @@
 from ScraperTesco import ScraperTesco
 from ScraperBilla import ScraperBilla
 from ScraperAlbert import ScraperAlbert
-import json, time, os, gzip, traceback
+import time, os, traceback
 
-COMPRESS = True
 SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla] # Takes about 8 minutes to complete on my system
 
-if not os.path.exists("out"):
-	os.makedirs("out")
+os.makedirs("out", exist_ok=True)
+os.makedirs("out/error", exist_ok=True)	
 
 for s in SCRAPERS:
 	start_time = time.time()
-	file_name = f"out/{int(start_time)}.{s.__name__}"
+	file_name = f"out/error/{int(start_time)}.{s.__name__}"
 
 	try:
 		print(s.__name__)
-		x = [i.__dict__ for i in s.scrape()]
+		s.scrape()
 		print(int(time.time() - start_time), "seconds")
-
-		with (gzip.open(file_name + ".json.gz", 'wb') if COMPRESS else open(file_name + ".json", 'wb')) as f:
-			f.write(json.dumps(x, ensure_ascii=False, indent="	").encode())
 
 	except Exception as e:
 		print(traceback.format_exc())
-		with open(file_name + ".error", 'w') as f:
+		with open(file_name + ".txt", 'w') as f:
 			f.write(traceback.format_exc())
