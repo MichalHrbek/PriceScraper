@@ -1,7 +1,9 @@
 from tkinter import *
-import json, glob, sys, datetime, gzip
 from graph.create_graph import create_graph
 from bokeh.plotting import show
+import sys, os
+sys.path.append(os.getcwd() + "/src")
+from DataManager import get_timeline_all
 
 def item_to_str(item: list[dict]) -> str:
 	return f'{item[-1]["name"]}, {item[-1]["price"]} CZK, {item[-1]["store"]}, {len(item)}' + ('' if all([i["price"] == item[0]["price"] for i in item]) else ', X')
@@ -122,21 +124,5 @@ class InfoWindow:
 		
 
 if __name__== "__main__":
-	filepaths: list[str] = []
-	for i in sys.argv[1:]:
-		for j in glob.glob(i):
-			filepaths.append(j)
-	
-	# print(filepaths)
-
-	db: dict[str,list[dict]] = {}
-	for i in filepaths:
-		with (gzip.open(i) if i.endswith(".gz") else open(i)) as f:
-			for j in json.loads(f.read()):
-				j["timestamp"] = datetime.datetime.fromtimestamp(j["timestamp"])
-				if j["id"] in db:
-					db[j["id"]].append(j)
-				else:
-					db[j["id"]] = [j]
-
+	db: dict[str,list[dict]] = get_timeline_all()
 	sw = SelectWindow()

@@ -1,6 +1,4 @@
-import csv
-import os
-import glob
+import csv, os, glob
 
 PROPS = [
 	"timestamp",
@@ -27,8 +25,7 @@ CSV_CONF = {
 }
 
 def check_existence(record):
-	if not os.path.exists(get_foldername(record["store"])):
-		os.makedirs(get_foldername(record["store"]))
+	os.makedirs(get_foldername(record["store"]), exist_ok=True)
 	if not os.path.exists(get_filename(record["store"],record["id"])):
 		with open(get_filename(record["store"],record["id"]), "x") as f:
 			f.write(CSV_CONF["delimiter"].join(PROPS) + "\n")
@@ -111,4 +108,13 @@ def get_current_all():
 		id = int(i.split("/")[-1][:-4])
 		store = i.split("/")[-2]
 		items.append(get_last_state(store, id))
+	return items
+
+def get_timeline_all():
+	files = glob.glob("out/*/*.csv")
+	items = {}
+	for i in files:
+		id = int(i.split("/")[-1][:-4])
+		store = i.split("/")[-2]
+		items[str(id)] = get_timeline(store, id)
 	return items
