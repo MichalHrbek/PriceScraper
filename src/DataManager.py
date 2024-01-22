@@ -110,6 +110,15 @@ def get_current_all():
 		items.append(get_last_state(store, id))
 	return items
 
+def get_start_all():
+	files = glob.glob("out/*/*.csv")
+	items = []
+	for i in files:
+		with open(i, "r") as f:
+			reader = csv.DictReader(f, **CSV_CONF)
+			items.append(next(reader))
+	return items
+
 def get_timeline_all():
 	files = glob.glob("out/*/*.csv")
 	items = {}
