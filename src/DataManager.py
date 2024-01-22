@@ -20,7 +20,7 @@ CONV = {
 }
 
 CSV_CONF = {
-	"quoting": csv.QUOTE_STRINGS,
+	"quoting": csv.QUOTE_MINIMAL,
 	"delimiter": ",",
 }
 
