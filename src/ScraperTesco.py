@@ -14,41 +14,38 @@ HEADERS = {
 
 class ScraperTesco(ScraperBase): # Scan takes 300s
 	def scrape():
-		try:
-			taxonomy = requests.get("https://nakup.itesco.cz/groceries/cs-CZ/taxonomy", headers=HEADERS).json()
-			categories = [i["url"][1:] for i in taxonomy]
-			for i in tqdm(categories):
-				j = 1
+		taxonomy = requests.get("https://nakup.itesco.cz/groceries/cs-CZ/taxonomy", headers=HEADERS).json()
+		categories = [i["url"][1:] for i in taxonomy]
+		for i in tqdm(categories):
+			j = 1
 
-				while True:
-					body = {
-						"resources": [
-							{
-								"type": "productsByCategory",
-								"params": {
-									"query": {
-										"include-children": "true",
-										"page": str(j),
-										"count": str(48)
-									},
-									"superdepartment": i
-								}
+			while True:
+				body = {
+					"resources": [
+						{
+							"type": "productsByCategory",
+							"params": {
+								"query": {
+									"include-children": "true",
+									"page": str(j),
+									"count": str(48)
+								},
+								"superdepartment": i
 							}
-						]
-					}
-					resp =  requests.post("https://nakup.itesco.cz/groceries/cs-CZ/resources", headers=HEADERS, json=body)
-					
-					if resp.ok:
-						item_list = resp.json()["productsByCategory"]["data"]["results"]["productItems"]
-						for k in item_list:
-							append_record(ItemTesco(k["product"]).__dict__)
+						}
+					]
+				}
+				resp =  requests.post("https://nakup.itesco.cz/groceries/cs-CZ/resources", headers=HEADERS, json=body)
+				
+				if resp.ok:
+					item_list = resp.json()["productsByCategory"]["data"]["results"]["productItems"]
+					for k in item_list:
+						append_record(ItemTesco(k["product"]).__dict__)
+				else:
+					if resp.text.strip() == "{}":
+						break
 					else:
-						if resp.text.strip() == "{}":
-							break
-						else:
-							print("error")
+						print("error")
 
 
-					j += 1
-		except KeyboardInterrupt:
-			pass
+				j += 1

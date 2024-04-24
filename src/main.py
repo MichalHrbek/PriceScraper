@@ -16,6 +16,9 @@ for s in SCRAPERS:
 		print(s.__name__)
 		s.scrape()
 		print(int(time.time() - start_time), "seconds")
+	
+	except KeyboardInterrupt:
+		print("Skipped after", int(time.time() - start_time), "seconds")
 
 	except Exception as e:
 		print(traceback.format_exc())
