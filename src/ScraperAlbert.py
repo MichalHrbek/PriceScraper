@@ -14,7 +14,7 @@ class ScraperAlbert(ScraperBase): # Scan takes 150s
 			for j in range(ceil(i["productCount"]/50)):
 				# I have no idea how persistedQuery works. Some hash is required but you can still change the search parameters. There's no query param to hash so idk where to get the hash
 				resp = requests.get('https://www.albert.cz/api/v1/?operationName=GetCategoryProductSearch&variables={"lang":"cs",' + f'"category":"{i["code"]}","pageNumber":{j},' + '"keyword":"chips","includeSponsoredProducts":false,"pageSize":20,"filterFlag":true,"plainChildCategories":true}&extensions={"persistedQuery":{"version":1,"sha256Hash":"20d530347d04e6203ba8f4d889655a4a7ab4011069afd6bc4045654798c79379"}}')
-				if not resp.ok():
+				if not resp.ok:
 					raise Exception("Problem with request: " + resp.text)
 				resp = resp.json()
 				if "data" not in resp:
