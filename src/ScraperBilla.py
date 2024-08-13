@@ -12,7 +12,7 @@ class ScraperBilla(ScraperBase): # Scan takes 30s
 			resp = requests.get("https://shop.billa.cz/api/products?pageSize=500&page=" + str(i)).json()
 
 			if "results" not in resp:
-				raise Exception(f"Error on URL https://shop.billa.cz/api/products?pageSize=500&page={i}\n{resp}")
+				raise Exception(f"Invalid response at [{resp.url}]:\n{resp.text}")
 
 			for j in resp["results"]:
 				append_record(ItemBilla(j).__dict__)

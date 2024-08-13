@@ -45,7 +45,7 @@ class ScraperTesco(ScraperBase): # Scan takes 300s
 					if resp.text.strip() == "{}":
 						break
 					else:
-						print("error")
+						raise Exception(f"Problem with request at [{resp.url}]:\n{resp.text}")
 
 
 				j += 1
