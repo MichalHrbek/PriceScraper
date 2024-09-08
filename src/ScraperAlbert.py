@@ -4,6 +4,7 @@ import requests
 from tqdm import tqdm
 from math import ceil
 from DataManager import append_record
+import traceback
 
 class ScraperAlbert(ScraperBase): # Scan takes 150s
 	def scrape():
@@ -16,9 +17,10 @@ class ScraperAlbert(ScraperBase): # Scan takes 150s
 				resp = requests.get('https://www.albert.cz/api/v1/?operationName=GetCategoryProductSearch&variables={"lang":"cs",' + f'"category":"{i["code"]}","pageNumber":{j},' + '"includeSponsoredProducts":false,"pageSize":20,"filterFlag":true,"plainChildCategories":true}&extensions={"persistedQuery":{"version":1,"sha256Hash":"161b8b6137d82243a0dbfeed8477edec6469b84e16b0d00490c1133c57e3f234"}}')
 				if not resp.ok:
 					raise Exception(f"Problem with request at [{resp.url}]:\n{resp.text}")
-				resp = resp.json()
-				if "data" not in resp:
-					raise Exception(f"Invalid response at [{resp.url}]:\n{resp.text}")
-				for k in resp["data"]["categoryProductSearch"]["products"]:
-					if category_url == k["url"].split('/')[2]: # This is to exclude duplicates. Tell me if you know of a better way to do this
-						append_record(ItemAlbert(k, category_name).__dict__)
+				try:
+					resp = resp.json()
+					for k in resp["data"]["categoryProductSearch"]["products"]:
+						if category_url == k["url"].split('/')[2]: # This is to exclude duplicates. Tell me if you know of a better way to do this
+							append_record(ItemAlbert(k, category_name).__dict__)
+				except Exception as e:
+					raise Exception(f"Invalid response at [{resp.url}]:\n{resp.text}\nException:\n{traceback.format_exc()}")
