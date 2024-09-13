@@ -18,8 +18,8 @@ class ScraperAlbert(ScraperBase): # Scan takes 150s
 				if not resp.ok:
 					raise Exception(f"Problem with request at [{resp.url}]:\n{resp.text}")
 				try:
-					resp = resp.json()
-					for k in resp["data"]["categoryProductSearch"]["products"]:
+					json = resp.json()
+					for k in json["data"]["categoryProductSearch"]["products"]:
 						if category_url == k["url"].split('/')[2]: # This is to exclude duplicates. Tell me if you know of a better way to do this
 							append_record(ItemAlbert(k, category_name).__dict__)
 				except Exception as e:
