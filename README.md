@@ -26,3 +26,5 @@
 - Fix legend entries with the same name merging
 - Handle overlapping lines better
 - Highlight data points
+### Scraper
+- Automatically update albert query hashes
