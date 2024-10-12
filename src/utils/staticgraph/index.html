@@ -7,9 +7,30 @@
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 	<script type="text/javascript" src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
 	<style>
+		body {
+			margin: 0 0 0 0;
+		}
 		.chart-container {
-			width: 90vw;
-			height: 90vh;
+			max-width: 85vw;
+			height: 100vh;
+		}
+		#hoverinfo {
+			width: 15vw;
+			height: 100vh;
+			position: absolute;
+			right: 0;
+			top: 0;
+
+			display: flex;
+			flex-direction: column;
+		}
+		.infotable {
+			width: 100%;
+			border: 2px solid;
+			border-collapse: collapse;
+		}
+		td {
+			border: 1px solid;
 		}
 	</style>
 </head>
@@ -17,6 +38,7 @@
 	<div class="chart-container">
 		<canvas id="chart"></canvas>
 	</div>
+	<div id="hoverinfo"></div>
 </body>
 </html>
 <script type="text/javascript">
@@ -74,12 +96,16 @@ async function main() {
 			parsing: false,
 
 			responsive: true,
+			maintainAspectRatio: false,
 			plugins: {
 				tooltip: {
+					enabled: true,
+					// position: 'nearest',
+					external: externalTooltipHandler,
 					callbacks: {
 						label: function(context) {
-							let i = context.element.$context.raw
-							return `${i.price}${CURRENCY} – ${i.store} – ${i.name}`;
+							let i = context.element.$context.raw;
+							return [`${i.store} – ${i.name}`,`${i.price} ${CURRENCY}`];
 						}
 					}
 				}
@@ -106,5 +132,21 @@ async function main() {
 }
 
 main();
+
+const externalTooltipHandler = (context) => {
+	const infoEl = window.hoverinfo;
+	infoEl.innerHTML = "";
+
+	context.tooltip.dataPoints.forEach(i => {
+		const tbl = document.createElement('table');
+		tbl.classList.add("infotable")
+		for (let key in i.raw) {
+			const tr = tbl.insertRow();
+			tr.insertCell().appendChild(document.createTextNode(key));
+			tr.insertCell().appendChild(document.createTextNode(i.raw[key]));
+		}
+		infoEl.appendChild(tbl)
+	})
+};
 
 </script>
