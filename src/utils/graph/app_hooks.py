@@ -10,9 +10,18 @@ def item_to_str(item) -> str:
 def item_to_id(item) -> str:
 	return f'{item["store"]};{item["id"]}'
 
+def item_to_path(item) -> str:
+	return f'{item["store"]}/{item["id"]}.csv'
+
 def on_server_loaded(server_context):
 	print("Loading...")
 	os.makedirs("src/utils/graph/static/", exist_ok=True)
-	with open("src/utils/graph/static/items.json", "w+") as f:
-		f.write(json.dumps({item_to_id(i): item_to_str(i) for i in get_current_all()}))
+	c = get_current_all()
+	with open("src/utils/graph/static/items.json", "w") as f:
+		f.write(json.dumps({item_to_id(i): item_to_str(i) for i in c}))
+	with open("out/index.json", "w") as f:
+		f.write(json.dumps({item_to_path(i): item_to_str(i) for i in c}))
 	print("Done")
+
+if __name__ == "__main__":
+	on_server_loaded(None)

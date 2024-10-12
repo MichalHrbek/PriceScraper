@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<input type="text" name="search" id="search" placeholder="Press enter to search">
+	<button id="but">Graph!</button>
+	<br>
+	<select name="names" id="names" multiple>
+	</select>
+</body>
+</html>
+<script>
+	var items;
+	async function main() {
+		items = await fetch("data/index.json").then(response => response.json());
+	}
+	search.onchange = () => {
+		names.replaceChildren();
+		for (const [id, name] of Object.entries(items)) {
+			if (name.toLowerCase().includes(search.value.toLowerCase())) {
+				var o = document.createElement("option");
+				o.innerText = name;
+				o.setAttribute("data-id", id);
+				names.appendChild(o);
+			}
+		}
+		names.size = names.children.length;
+	}
+	but.onclick = () => {
+		var sel = document.querySelectorAll("option:checked");
+		var url = "/?"
+		sel.forEach(element => {
+			url += "&ids[]=" + encodeURIComponent(element.getAttribute("data-id"))
+		});
+		window.location = url
+	}
+	main();
+</script>
