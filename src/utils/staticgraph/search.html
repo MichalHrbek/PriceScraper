@@ -2,14 +2,65 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Document</title>
+	<title>Price Scraper Search</title>
+	<style>
+		body, html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+		}
+		table {
+			border: 1px solid;
+		}
+		.tableheader {
+			width: 50%;
+			margin-bottom: 5px;
+			margin-top: 5px;
+			/* text-align: center; */
+		}
+		.itemtable {
+			min-height: 25px;
+			width: 50%;
+			overflow: scroll;
+			display:block;
+			height: 90%;
+			padding-right: 15px;
+		}
+		.content {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			flex-wrap: wrap;
+			height: 100vh;
+			box-sizing: border-box;
+			padding: 10px 10px 10px 10px;
+		}
+		.filterbox {
+			width: 100%;
+		}
+		td:nth-child(1) {
+			width: 100%;
+		}
+	</style>
 </head>
 <body>
-	<input type="text" name="search" id="search" placeholder="Press enter to search">
-	<button id="but">Graph!</button>
-	<br>
-	<select name="names" id="names" multiple>
-	</select>
+	<div class="content">
+		<div class="filterbox">
+			<input type="text" name="search" id="search" placeholder="Press enter to search" onchange="filter()">
+			<button onclick="filter()">🔍</button>
+			<button onclick="plot()">Plot!</button>
+		</div>
+		<div class="tableheader">
+			<b>Picked</b>
+			<button onclick="removeAll()">🗑️</button>
+		</div>
+		<div class="tableheader">
+			<b>Filtered</b>
+			<button onclick="pickAll()">☑️</button>
+		</div>
+		<table id="picked" class="itemtable"></table>
+		<table id="filtered" class="itemtable">
+	</div>
 </body>
 </html>
 <script>
@@ -17,25 +68,76 @@
 	async function main() {
 		items = await fetch("data/index.json").then(response => response.json());
 	}
-	search.onchange = () => {
-		names.replaceChildren();
-		for (const [id, name] of Object.entries(items)) {
-			if (name.toLowerCase().includes(search.value.toLowerCase())) {
-				var o = document.createElement("option");
-				o.innerText = name;
-				o.setAttribute("data-id", id);
-				names.appendChild(o);
+	function pickItem(id) {
+		if (isPicked(id)) {
+			return;
+		}
+
+		const tr = window.picked.insertRow();
+		tr.setAttribute("data-id", id);
+		
+		const btn = document.createElement('button');
+		btn.onclick = () => {
+			tr.remove();
+			filter();
+		}
+		btn.innerText = "❌"
+		
+		tr.insertCell().appendChild(document.createTextNode(items[id]));
+		tr.insertCell().appendChild(btn)
+	}
+
+	function isPicked(id) {
+		for (let i = 0; i < window.picked.rows.length; i++) {
+			if (window.picked.rows[i].getAttribute("data-id") == id) {
+				return true;
 			}
 		}
-		names.size = names.children.length;
+		return false;
 	}
-	but.onclick = () => {
-		var sel = document.querySelectorAll("option:checked");
-		var url = "/?"
-		sel.forEach(element => {
-			url += "&ids[]=" + encodeURIComponent(element.getAttribute("data-id"))
-		});
-		window.location = url
+
+	function filter() {
+		window.filtered.replaceChildren();
+		for (const [id, name] of Object.entries(items)) {
+			if (name.toLowerCase().includes(search.value.toLowerCase())) {
+				if (isPicked(id)) continue;
+
+				const tr = window.filtered.insertRow();
+				tr.setAttribute("data-id", id);
+				
+				const btn = document.createElement('button');
+				btn.onclick = () => {
+					pickItem(id);
+					tr.remove();
+					// filter();
+				}
+				btn.innerText = "➕";
+	
+				tr.insertCell().appendChild(document.createTextNode(name));
+				tr.insertCell().appendChild(btn);
+			}
+		}
+	}
+
+	function pickAll() {
+		for (let i = 0; i < window.filtered.rows.length; i++) {
+			pickItem(window.filtered.rows[i].getAttribute("data-id"));
+		}
+		window.filtered.replaceChildren()
+		// filter();
+	}
+	
+	function removeAll() {
+		window.picked.replaceChildren();
+		filter();
+	}
+
+	function plot() {
+		var url = "/?";
+		for (let i = 0; i < window.picked.rows.length; i++) {
+			url += "&ids[]=" + encodeURIComponent(window.picked.rows[i].getAttribute("data-id"));
+		}
+		window.location = url;
 	}
 	main();
 </script>
