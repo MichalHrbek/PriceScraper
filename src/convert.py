@@ -3,6 +3,7 @@ import sys, glob, json
 import tqdm
 from collections import defaultdict
 
+# Converts from the old format to .csv
 if __name__ == "__main__":
 	filepaths = []
 	for i in sys.argv[1:]:
