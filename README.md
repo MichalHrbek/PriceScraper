@@ -2,29 +2,27 @@
 - Made to scrape prices of big grocery stores in Czechia that have online catalogues (Albert, Billa, Tesco) 
 
 ## Usage
-- `python3 main.py`
+### Scraping
+- `python3 src/main.py`
 - The program should finish in about 8 minutes depending on your internet connection
+### Web UI
+- Generate index of items: `python3 src/GenerateIndex.py`
+- Run web server: `cd web; python3 -m http.server`
 
 ## Output
-- Output files are stored in this format: `out/{store}/{id}.csv`
-- Fields that haven't changed from the last datapoint are empty to save space
+- Output files: `out/{store}/{id}.csv` and `out/error/{timestamp}.{scraper}.txt`
+- Fields that haven't changed since the last entry are null to save space + all changes are easily visible when you inspect the files in a text editor
 - All stores share these fields: `name`, `category`, `price`, `store`, `id`, `timestamp`, `unit_price`, `unit_type`, `url`
 - Shows the progress while scraping with `tqdm`
 
 ## Working with the data
-### GUI with mass plotting and search [[Search]](http://158.101.162.168:8081/graph/static/search.html) [[Example]](http://158.101.162.168:8081/graph?graph&ids[]=tesco%3B2001019141652&ids[]=tesco%3B2001130909583&ids[]=tesco%3B2001000151875&ids[]=tesco%3B2001130898559&ids[]=tesco%3B2001130294293&ids[]=tesco%3B2001130907487&ids[]=tesco%3B2001130294254&ids[]=tesco%3B2001130905057&ids[]=tesco%3B2001130905063&ids[]=tesco%3B2001130905073&ids[]=albert%3B20480905&ids[]=albert%3B22459466&ids[]=albert%3B27344064&ids[]=albert%3B26109718&ids[]=albert%3B21976056&ids[]=billa%3B82322229&ids[]=billa%3B82316363&ids[]=billa%3B82315094)
-- `python3 utils/vis.py path`
-- Use wildcards ex. `out/albert/*.csv`
-- Requires `bokeh`
+### Web UI with plotting and search [[Search]](http://158.101.162.168:8082/search.html) [[Example]](http://158.101.162.168:8082/?ids[]=tesco%2F2001019141652.csv&ids[]=tesco%2F2001130909583.csv&ids[]=tesco%2F2001000151875.csv&ids[]=tesco%2F2001130898559.csv&ids[]=tesco%2F2001130294293.csv&ids[]=tesco%2F2001130907487.csv&ids[]=tesco%2F2001130294254.csv&ids[]=tesco%2F2001130905057.csv&ids[]=tesco%2F2001130905063.csv&ids[]=tesco%2F2001130905073.csv&ids[]=albert%2F20480905.csv&ids[]=albert%2F22459466.csv&ids[]=albert%2F27344064.csv&ids[]=albert%2F26109718.csv&ids[]=albert%2F21976056.csv&ids[]=billa%2F82322229.csv&ids[]=billa%2F82316363.csv&ids[]=billa%2F82315094.csv)
 
-<img src="https://michalhrbek.github.io/images/pricescraper/list.png" width=920>
-<img src="https://michalhrbek.github.io/images/pricescraper/bokeh_plot.png" width=920>
-<img src="https://michalhrbek.github.io/images/pricescraper/info.png" width=920>
+<img src="https://michalhrbek.github.io/images/pricescraper/chartjs_plot.png" width=920>
+<img src="https://michalhrbek.github.io/images/pricescraper/search.png" width=920>
 
 ## TODO
-### Graph
-- Fix legend entries with the same name merging
-- Handle overlapping lines better
-- Highlight data points
+### Search
+- [ ] Filter by store
 ### Scraper
-- Automatically update albert query hashes
+- [ ] Automatically update albert query hashes
