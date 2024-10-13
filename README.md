@@ -8,6 +8,7 @@
 ### Web UI
 - Generate index of items: `python3 src/GenerateIndex.py`
 - Run web server: `cd web; python3 -m http.server`
+- You can download over a year of data scraped everyday at midnight [here](http://158.101.162.168:8082/out.tar.gz) or inspect the files [here](http://158.101.162.168:8082/data/)
 
 ## Output
 - Output files: `out/{store}/{id}.csv` and `out/error/{timestamp}.{scraper}.txt`
