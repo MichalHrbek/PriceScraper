@@ -42,6 +42,8 @@
 			width: 100%;
 		}
 	</style>
+	<script src="js/modules/dist/papaparse.min.js"></script>
+	<script src="js/search.js" defer></script>
 </head>
 <body>
 	<div class="content">
@@ -49,6 +51,10 @@
 			<input type="text" name="search" id="search" placeholder="Press enter to search" onchange="filter()">
 			<button onclick="filter()">🔍</button>
 			<button onclick="plot()">📈</button>
+			<label for="start">Start: </label>
+			<input type="date" id="start">
+			<label for="end">End: </label>
+			<input type="date" id="end">
 		</div>
 		<div class="tableheader">
 			<b>Picked</b>
@@ -63,81 +69,3 @@
 	</div>
 </body>
 </html>
-<script>
-	var items;
-	async function main() {
-		items = await fetch("data/index.json").then(response => response.json());
-	}
-	function pickItem(id) {
-		if (isPicked(id)) {
-			return;
-		}
-
-		const tr = window.picked.insertRow();
-		tr.setAttribute("data-id", id);
-		
-		const btn = document.createElement('button');
-		btn.onclick = () => {
-			tr.remove();
-			filter();
-		}
-		btn.innerText = "❌"
-		
-		tr.insertCell().appendChild(document.createTextNode(items[id]));
-		tr.insertCell().appendChild(btn)
-	}
-
-	function isPicked(id) {
-		for (let i = 0; i < window.picked.rows.length; i++) {
-			if (window.picked.rows[i].getAttribute("data-id") == id) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	function filter() {
-		window.filtered.replaceChildren();
-		for (const [id, name] of Object.entries(items)) {
-			if (name.toLowerCase().includes(search.value.toLowerCase())) {
-				if (isPicked(id)) continue;
-
-				const tr = window.filtered.insertRow();
-				tr.setAttribute("data-id", id);
-				
-				const btn = document.createElement('button');
-				btn.onclick = () => {
-					pickItem(id);
-					tr.remove();
-					// filter();
-				}
-				btn.innerText = "➕";
-	
-				tr.insertCell().appendChild(document.createTextNode(name));
-				tr.insertCell().appendChild(btn);
-			}
-		}
-	}
-
-	function pickAll() {
-		for (let i = 0; i < window.filtered.rows.length; i++) {
-			pickItem(window.filtered.rows[i].getAttribute("data-id"));
-		}
-		window.filtered.replaceChildren()
-		// filter();
-	}
-	
-	function removeAll() {
-		window.picked.replaceChildren();
-		filter();
-	}
-
-	function plot() {
-		var url = "/?";
-		for (let i = 0; i < window.picked.rows.length; i++) {
-			url += "&ids[]=" + encodeURIComponent(window.picked.rows[i].getAttribute("data-id"));
-		}
-		window.location = url;
-	}
-	main();
-</script>
