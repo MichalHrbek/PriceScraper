@@ -12,12 +12,11 @@
 
 ## Output
 - Output files: `out/{store}/{id}.csv` and `out/error/{timestamp}.{scraper}.txt`
-- Fields that haven't changed since the last entry are null to save space + all changes are easily visible when you inspect the files in a text editor
+- Fields that haven't changed since the last entry are null, to save space + all changes are easily visible when you inspect the files in a text editor
 - All stores share these fields: `name`, `category`, `price`, `store`, `id`, `timestamp`, `unit_price`, `unit_type`, `url`
 - Shows the progress while scraping with `tqdm`
 
-## Working with the data
-### Web UI with plotting and search [[Search]](http://158.101.162.168:8082/search.html) [[Example]](http://158.101.162.168:8082/?ids[]=tesco%2F2001019141652.csv&ids[]=tesco%2F2001130909583.csv&ids[]=tesco%2F2001000151875.csv&ids[]=tesco%2F2001130898559.csv&ids[]=tesco%2F2001130294293.csv&ids[]=tesco%2F2001130907487.csv&ids[]=tesco%2F2001130294254.csv&ids[]=tesco%2F2001130905057.csv&ids[]=tesco%2F2001130905063.csv&ids[]=tesco%2F2001130905073.csv&ids[]=albert%2F20480905.csv&ids[]=albert%2F22459466.csv&ids[]=albert%2F27344064.csv&ids[]=albert%2F26109718.csv&ids[]=albert%2F21976056.csv&ids[]=billa%2F82322229.csv&ids[]=billa%2F82316363.csv&ids[]=billa%2F82315094.csv)
+## Web UI [[Search]](http://158.101.162.168:8082/search.html) [[Example]](http://158.101.162.168:8082/?ids[]=tesco%2F2001019141652.csv&ids[]=tesco%2F2001130909583.csv&ids[]=tesco%2F2001000151875.csv&ids[]=tesco%2F2001130898559.csv&ids[]=tesco%2F2001130294293.csv&ids[]=tesco%2F2001130907487.csv&ids[]=tesco%2F2001130294254.csv&ids[]=tesco%2F2001130905057.csv&ids[]=tesco%2F2001130905063.csv&ids[]=tesco%2F2001130905073.csv&ids[]=albert%2F20480905.csv&ids[]=albert%2F22459466.csv&ids[]=albert%2F27344064.csv&ids[]=albert%2F26109718.csv&ids[]=albert%2F21976056.csv&ids[]=billa%2F82322229.csv&ids[]=billa%2F82316363.csv&ids[]=billa%2F82315094.csv)
 
 <img src="https://michalhrbek.github.io/images/pricescraper/chartjs_plot.png" width=920>
 <img src="https://michalhrbek.github.io/images/pricescraper/search.png" width=920>
