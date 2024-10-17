@@ -88,7 +88,14 @@ const externalTooltipHandler = (context) => {
 		for (let key in i.raw) {
 			const tr = tbl.insertRow();
 			tr.insertCell().appendChild(document.createTextNode(key));
-			tr.insertCell().appendChild(document.createTextNode(i.raw[key]));
+			if (key == "url") {
+				const a = document.createElement('a');
+				a.href = i.raw[key];
+				a.appendChild(document.createTextNode(i.raw[key]))
+				tr.insertCell().appendChild(a)
+			} else {
+				tr.insertCell().appendChild(document.createTextNode(i.raw[key]));
+			}
 		}
 		infoEl.appendChild(tbl)
 	})
