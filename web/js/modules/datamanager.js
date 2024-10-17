@@ -13,7 +13,7 @@ export function genRoundTransform(seconds) {
 export const roundToHour = genRoundTransform(3600)
 export const roundToMinute = genRoundTransform(60)
 
-export async function getItemTimeline(path, _transform=defaultTransform, startTime=Number.MIN_SAFE_INTEGER, endTime=Number.MAX_SAFE_INTEGER) {
+export async function getItemTimeline(path, _transform=defaultTransform) {
 	// This doesn't seem safe
 	let csvData = await fetch("data/" + path).then(response => response.text());
 
@@ -33,24 +33,26 @@ export async function getItemTimeline(path, _transform=defaultTransform, startTi
 		});
 	}
 
-	let start = 0;
-	for (let i = 0; i < parsed.data.length; i++) {
-		if (parsed.data[i].timestamp >= startTime) {
+	return parsed.data;
+}
+
+// Filters the timeline in place
+export function filterDate(timeline, startTime=Number.MIN_SAFE_INTEGER, endTime=Number.MAX_SAFE_INTEGER) {
+	let start = timeline.length;
+	for (let i = 0; i < timeline.length; i++) {
+		if (timeline[i].timestamp >= startTime && timeline[i].timestamp <= endTime) {
 			start = i;
 			break;
 		}
 	}
-	// FIX: If whole array is befora start date
-	parsed.data.splice(0,start);
+	timeline.splice(0,start);
 	
-	let end = parsed.data.length;
-	for (let i = 0; i < parsed.data.length; i++) {
-		if (parsed.data[i].timestamp > endTime) {
+	let end = timeline.length;
+	for (let i = 0; i < timeline.length; i++) {
+		if (timeline[i].timestamp > endTime) {
 			end = i;
 			break;
 		}
 	}
-	parsed.data.splice(end,parsed.data.length-end);
-
-	return parsed.data;
+	timeline.splice(end,timeline.length-end);
 }

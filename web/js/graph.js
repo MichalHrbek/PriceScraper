@@ -1,4 +1,4 @@
-import { getItemTimeline, roundToHour } from "./modules/datamanager.js"
+import { getItemTimeline, roundToHour, filterDate } from "./modules/datamanager.js"
 
 const CURRENCY = "CZK";
 const ctx = document.getElementById('chart');
@@ -11,17 +11,23 @@ if (params.get("start")) startTime = parseInt(params.get("start"));
 if (params.get("end")) endTime = parseInt(params.get("end"));
 
 async function getDataset(path) {
-	let i = await getItemTimeline(path,roundToHour,startTime,endTime);
+	let i = await getItemTimeline(path,roundToHour);
+	
+	let label;
+	if(i.length > 0) label = `${i[0].store} – ${i[i.length-1].name}`;
+	else label = "No data: " + path;
+	
+	filterDate(i,startTime,endTime);
+	
 	return {
-		label: `${i[0].store} – ${i[i.length-1].name}`,
+		label: label,
 		data: i,
 	};
 }
 
 async function main() {
-	var d = await Promise.all(params.getAll("ids[]").map(async (path) => {
-		console.log(path);
-		return await getDataset(path);
+	var d = await Promise.all(params.getAll("ids[]").map((path) => {
+		return getDataset(path);
 	}));
 
 	const priceChart = new Chart(ctx, {
