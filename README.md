@@ -26,3 +26,4 @@
 - [ ] Filter by store
 ### Scraper
 - [ ] Automatically update albert query hashes
+- [ ] Scrape the Tesco clubcard price (this is needed to make comparisions make sense, since it is the Tesco equivalent of a discount)

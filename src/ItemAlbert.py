@@ -5,7 +5,13 @@ class ItemAlbert(ItemBase):
 	def __init__(self, item, category, timestamp:int=None) -> None:
 		self.name = item["name"]
 		self.category = category
-		self.price = item["price"]["value"]
+		# This seems to always get the correct price, even when there is no discount
+		# Unfortuanetly it is only available in the formatted version, e.g. "1.099,00 Kč"
+		try:
+			self.price = float(item["price"]["discountedPriceFormatted"].split()[0].replace('.','').replace(',','.'))
+		except:
+			# print("Failed to parse the price. Falling back to price.value")
+			self.price = item["price"]["value"] 
 		self.store = "albert"
 		self.id = int(item["url"].split("/")[-1])
 		self.url = "https://www.albert.cz" + item["url"] # The url can also just be https://www.albert.cz/p/{id} without the slug
