@@ -1,6 +1,30 @@
 var items;
+var stores;
+
 async function main() {
-	items = await fetch("data/index.json").then(response => response.json());
+	index = await fetch("data/index.json").then(response => response.json());
+	items = index.items;
+	stores = {};
+	index.stores.forEach(i => {
+		stores[i] = true;
+	});
+
+	index.stores.forEach(i => {
+		var label = document.createElement("label");
+		label.htmlFor = i;
+		label.appendChild(document.createTextNode(i));
+		window.storefilter.appendChild(label);
+		var checkbox = document.createElement("input");
+		checkbox.type = "checkbox";
+		checkbox.name = i;
+		checkbox.id = i;
+		checkbox.checked = true;
+		checkbox.onchange = (event) => {
+			stores[i] = event.currentTarget.checked;
+			filter();
+		}
+		window.storefilter.appendChild(checkbox);
+	});
 }
 
 function pickItem(id) {
@@ -18,7 +42,7 @@ function pickItem(id) {
 	}
 	rm_btn.innerText = "❌"
 	
-	tr.insertCell().appendChild(document.createTextNode(items[id]));
+	tr.insertCell().appendChild(document.createTextNode(items[id].name));
 	tr.insertCell().appendChild(rm_btn)
 }
 
@@ -33,9 +57,11 @@ function isPicked(id) {
 
 function filter() {
 	window.filtered.replaceChildren();
-	for (const [id, name] of Object.entries(items)) {
-		if (name.toLowerCase().includes(search.value.toLowerCase())) {
+	if (search.value.trim() === "") return;
+	for (const [id, item] of Object.entries(items)) {
+		if (item.name.toLowerCase().includes(search.value.toLowerCase())) {
 			if (isPicked(id)) continue;
+			if(!stores[item.store]) continue;
 
 			const tr = window.filtered.insertRow();
 			tr.setAttribute("data-id", id);
@@ -48,7 +74,7 @@ function filter() {
 			}
 			add_btn.innerText = "➕";
 
-			tr.insertCell().appendChild(document.createTextNode(name));
+			tr.insertCell().appendChild(document.createTextNode(item.name));
 			tr.insertCell().appendChild(add_btn);
 		}
 	}
