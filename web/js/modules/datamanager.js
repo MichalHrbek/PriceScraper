@@ -15,7 +15,7 @@ export const roundToMinute = genRoundTransform(60)
 
 export async function getItemTimeline(path, _transform=defaultTransform) {
 	// This doesn't seem safe
-	let csvData = await fetch("data/" + path).then(response => response.text());
+	const csvData = await fetch("data/" + path).then(response => response.text());
 
 	var parsed = Papa.parse(csvData, {
 		header: true,
@@ -34,6 +34,14 @@ export async function getItemTimeline(path, _transform=defaultTransform) {
 	}
 
 	return parsed.data;
+}
+
+export async function getItemUnparsed(path, keys=undefined) {
+	const timeline = await getItemTimeline(path,undefined);
+	return Papa.unparse(timeline, {
+		header: true,
+		columns: keys,
+	});
 }
 
 // Filters the timeline in place

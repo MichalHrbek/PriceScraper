@@ -24,7 +24,7 @@
 ## TODO
 ### Search
 - [x] Filter by store
-- [ ] Button to download selected item as normal csv
+- [x] Button to download selected item as normal csv
 ### Scraper
 - [ ] Automatically update albert query hashes
 - [ ] Scrape the Tesco clubcard price (this is needed to make comparisions make sense, since it is the Tesco equivalent of a discount)
