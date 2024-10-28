@@ -1,8 +1,11 @@
+import { getIndex } from "./modules/datamanager.js"
+
 var items;
 var stores;
 
-async function main() {
-	index = await fetch("data/index.json").then(response => response.json());
+export async function main() {
+	const index = await fetch("data/index.json").then(response => response.json());
+	// const index = await getIndex();
 	items = index.items;
 	stores = {};
 	index.stores.forEach(i => {
@@ -55,7 +58,7 @@ function isPicked(id) {
 	return false;
 }
 
-function filter() {
+export function filter() {
 	window.filtered.replaceChildren();
 	if (search.value.trim() === "") return;
 	for (const [id, item] of Object.entries(items)) {
@@ -80,11 +83,7 @@ function filter() {
 	}
 }
 
-function downloadItem(path) {
-	getItemTimeline(path)
-}
-
-function pickAll() {
+export function pickAll() {
 	for (let i = 0; i < window.filtered.rows.length; i++) {
 		pickItem(window.filtered.rows[i].getAttribute("data-id"));
 	}
@@ -92,12 +91,12 @@ function pickAll() {
 	// filter();
 }
 
-function removeAll() {
+export function removeAll() {
 	window.picked.replaceChildren();
 	filter();
 }
 
-function plot() {
+export function plot() {
 	let params = new URLSearchParams();
 	if (window.start.value) {
 		params.append("start", new Date(window.start.value + 'T00:00:00').getTime());

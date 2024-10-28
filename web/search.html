@@ -42,7 +42,7 @@
 			width: 100%;
 		}
 	</style>
-	<script src="js/search.js" defer></script>
+	<script src="js/modules/min/papaparse.min.js"></script>
 </head>
 <body>
 	<div class="content">
@@ -68,5 +68,12 @@
 		<table id="picked" class="itemtable"></table>
 		<table id="filtered" class="itemtable">
 	</div>
+	<script type="module">
+        import { plot, filter, removeAll, pickAll } from './js/search.js';
+        window.plot = plot;
+		window.filter = filter;
+		window.removeAll = removeAll;
+		window.pickAll = pickAll;
+    </script>
 </body>
 </html>

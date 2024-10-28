@@ -74,7 +74,15 @@ export async function getIndex(_transform=defaultTransform) {
 		dynamicTyping: {"timestamp": true, "price": true, "unit_price": true},
 		transform: _transform,
 	});
+
+	let o = {};
+
+	o.items = parsed.data.reduce((acc, i) => {
+		acc[`${i.store}/${i.id}.csv`] = i;
+		return acc;
+	}, {});
+
+	o.stores = new Set(parsed.data.map(item => item.store))
 	
-	// stores = new Set(index.map(item => item.store))
-	return parsed.data;
+	return o;
 }
