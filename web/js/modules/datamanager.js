@@ -64,3 +64,17 @@ export function filterDate(timeline, startTime=Number.MIN_SAFE_INTEGER, endTime=
 	}
 	timeline.splice(end,timeline.length-end);
 }
+
+export async function getIndex(_transform=defaultTransform) {
+	const csvData = await fetch("data/index.csv").then(response => response.text());
+	
+	var parsed = Papa.parse(csvData, {
+		header: true,
+		skipEmptyLines: true,
+		dynamicTyping: {"timestamp": true, "price": true, "unit_price": true},
+		transform: _transform,
+	});
+	
+	// stores = new Set(index.map(item => item.store))
+	return parsed.data;
+}

@@ -17,13 +17,10 @@ def generate_index_json():
 		f.write(json.dumps(d))
 
 def generate_index_csv():
-	stores = glob.glob("out/*/")
-	if "out/error/" in stores: stores.remove("out/error/")
 	with open("out/index.csv", "w") as f:
 		f.write(','.join(PROPS) + "\n")
-		for i in stores:
-			for j in glob.glob(i + "*"):
-				f.write(linecache.getline(j, 2))
+		for i in glob.glob("out/*/*.csv"):
+			f.write(linecache.getline(i, 2))
 
 if __name__ == "__main__":
 	generate_index_json()
