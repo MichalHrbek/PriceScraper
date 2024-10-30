@@ -10,7 +10,6 @@ os.makedirs("out/error", exist_ok=True)
 
 for s in SCRAPERS:
 	start_time = time.time()
-	file_name = f"out/error/{int(start_time)}.{s.__name__}"
 
 	try:
 		print(s.__name__)
@@ -22,5 +21,5 @@ for s in SCRAPERS:
 
 	except Exception as e:
 		print(traceback.format_exc())
-		with open(file_name + ".txt", 'w') as f:
+		with open(f"out/error/{int(start_time)}.{s.__name__}.txt", 'w') as f:
 			f.write(traceback.format_exc())
