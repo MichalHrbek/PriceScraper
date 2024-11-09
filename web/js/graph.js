@@ -101,7 +101,7 @@ const externalTooltipHandler = (context) => {
 		const tr = tbl.insertRow();
 		tr.insertCell().appendChild(document.createTextNode("Download"));
 		const cell = tr.insertCell();
-		function genAnchor(text, href="#", data_callback=undefined) {
+		function genAnchor(text, href, data_callback=undefined) {
 			const a = document.createElement('a');
 			a.href = href;
 			a.appendChild(document.createTextNode(text));
@@ -119,8 +119,8 @@ const externalTooltipHandler = (context) => {
 		}
 
 		const path = `${i.raw["store"]}/${i.raw["id"]}.csv`;
-		genAnchor("minimal", "#", async () => await getItemUnparsed(path, ["timestamp","price"]));
-		genAnchor("full", "#", async () => await getItemUnparsed(path));
+		genAnchor("minimal", "javascript:void(0)", async () => await getItemUnparsed(path, ["timestamp","price"]));
+		genAnchor("full", "javascript:void(0)", async () => await getItemUnparsed(path));
 		genAnchor("raw", "data/"+path);
 
 		infoEl.appendChild(tbl)
