@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Price Scraper Graph</title>
+	<script src="js/modules/min/chart.min.js"></script>
+	<script src="js/modules/min/chartjs-adapter-date-fns.min.js"></script>
+	<script src="js/modules/min/papaparse.min.js"></script>
+	<script type="module" src="js/graph.js" defer></script>
+	<style>
+		body {
+			margin: 0 0 0 0;
+		}
+		.chart-container {
+			max-width: 85vw;
+			height: 100vh;
+		}
+		#hoverinfo {
+			width: 15vw;
+			height: 100vh;
+			position: absolute;
+			right: 0;
+			top: 0;
+
+			display: flex;
+			flex-direction: column;
+
+			overflow: scroll;
+			display:block;
+		}
+		.infotable {
+			width: 100%;
+			border: 2px solid;
+			border-collapse: collapse;
+		}
+		td {
+			border: 1px solid;
+		}
+	</style>
+</head>
+<body>
+	<div class="chart-container">
+		<canvas id="chart"></canvas>
+	</div>
+	<div id="hoverinfo"></div>
+</body>
+</html>

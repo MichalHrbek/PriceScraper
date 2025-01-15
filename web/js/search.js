@@ -107,6 +107,6 @@ export function plot() {
 	for (let i = 0; i < window.picked.rows.length; i++) {
 		params.append("ids[]", window.picked.rows[i].getAttribute("data-id"))
 	}
-	window.location = '/?' + params.toString();
+	window.location = '/graph.html?' + params.toString();
 }
 main();

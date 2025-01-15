@@ -2,46 +2,78 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Price Scraper Graph</title>
-	<script src="js/modules/min/chart.min.js"></script>
-	<script src="js/modules/min/chartjs-adapter-date-fns.min.js"></script>
-	<script src="js/modules/min/papaparse.min.js"></script>
-	<script type="module" src="js/graph.js" defer></script>
+	<title>Price Scraper Search</title>
 	<style>
-		body {
-			margin: 0 0 0 0;
+		body, html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
 		}
-		.chart-container {
-			max-width: 85vw;
-			height: 100vh;
-		}
-		#hoverinfo {
-			width: 15vw;
-			height: 100vh;
-			position: absolute;
-			right: 0;
-			top: 0;
-
-			display: flex;
-			flex-direction: column;
-
-			overflow: scroll;
-			display:block;
-		}
-		.infotable {
-			width: 100%;
-			border: 2px solid;
-			border-collapse: collapse;
-		}
-		td {
+		table {
 			border: 1px solid;
 		}
+		.tableheader {
+			width: 50%;
+			margin-bottom: 5px;
+			margin-top: 5px;
+			/* text-align: center; */
+		}
+		.itemtable {
+			min-height: 25px;
+			width: 50%;
+			overflow: scroll;
+			display:block;
+			height: 90%;
+			padding-right: 15px;
+		}
+		.content {
+			display: flex;
+			flex-direction: row;
+			width: 100%;
+			flex-wrap: wrap;
+			height: 100vh;
+			box-sizing: border-box;
+			padding: 10px 10px 10px 10px;
+		}
+		.filterbox {
+			width: 100%;
+		}
+		td:nth-child(1) {
+			width: 100%;
+		}
 	</style>
+	<script src="js/modules/min/papaparse.min.js"></script>
 </head>
 <body>
-	<div class="chart-container">
-		<canvas id="chart"></canvas>
+	<div class="content">
+		<div class="filterbox">
+			<input type="text" name="search" id="search" placeholder="Press enter to search" onchange="filter()">
+			<button onclick="filter()">🔍</button>
+			<button onclick="plot()">📈</button>
+			<label for="start">Start: </label>
+			<input type="date" id="start">
+			<label for="end">End: </label>
+			<input type="date" id="end">
+			<br>
+			<span id="storefilter"></span>
+		</div>
+		<div class="tableheader">
+			<b>Picked</b>
+			<button onclick="removeAll()">🗑️</button>
+		</div>
+		<div class="tableheader">
+			<b>Filtered</b>
+			<button onclick="pickAll()">☑️</button>
+		</div>
+		<table id="picked" class="itemtable"></table>
+		<table id="filtered" class="itemtable">
 	</div>
-	<div id="hoverinfo"></div>
+	<script type="module">
+        import { plot, filter, removeAll, pickAll } from './js/search.js';
+        window.plot = plot;
+		window.filter = filter;
+		window.removeAll = removeAll;
+		window.pickAll = pickAll;
+    </script>
 </body>
 </html>
