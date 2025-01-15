@@ -15,7 +15,8 @@ HEADERS = {
 class ScraperTesco(ScraperBase): # Scan takes 300s
 	def scrape():
 		taxonomy = requests.get("https://nakup.itesco.cz/groceries/cs-CZ/taxonomy", headers=HEADERS).json()
-		categories = [i["url"][1:] for i in taxonomy]
+		categories = [i["url"][1:] for i in taxonomy if i["url"] != "/vyber-tydne"] # Skipping "vyber-tydne" for better performance since it only contains products already present in other categories
+		recorded_ids: set[int] = set() # To avoid duplicates
 		for i in tqdm(categories):
 			j = 1
 
@@ -40,7 +41,9 @@ class ScraperTesco(ScraperBase): # Scan takes 300s
 				if resp.ok:
 					item_list = resp.json()["productsByCategory"]["data"]["results"]["productItems"]
 					for k in item_list:
-						append_record(ItemTesco(k["product"]).__dict__)
+						if int(k["product"]["id"]) not in recorded_ids:
+							append_record(ItemTesco(k["product"]).__dict__)
+							recorded_ids.add(int(k["product"]["id"]))
 				else:
 					if resp.text.strip() == "{}":
 						break
