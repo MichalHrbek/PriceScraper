@@ -1,4 +1,4 @@
-class ItemBase:
+class Item:
 	name: str
 	category: str
 	price: float
