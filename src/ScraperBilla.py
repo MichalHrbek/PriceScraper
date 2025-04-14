@@ -16,7 +16,11 @@ class ScraperBilla(Scraper): # Scan takes 30s
 				raise Exception(f"Invalid response at [{resp.url}]:\n{resp.text}")
 			
 			for j in resp["results"]:
-				append_record(ScraperBilla.parse_item(j).__dict__)
+				try:
+					r = ScraperBilla.parse_item(j).__dict__
+				except:
+					raise Exception(f"Invalid item:\n{j}")
+				append_record(r)
 	
 	def parse_item(item, timestamp:int=None) -> Item:
 		i = Item()
