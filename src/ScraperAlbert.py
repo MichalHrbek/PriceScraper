@@ -15,7 +15,7 @@ class ScraperAlbert(Scraper): # Scan takes 150s
 			category_url = i["url"].split('/')[2]
 			for j in range(ceil(i["productCount"]/50)):
 				# I have no idea how persistedQuery works. Some hash is required but you can still change the search parameters. There's no query param to hash so idk where to get the hash
-				resp = requests.get('https://www.albert.cz/api/v1/?operationName=GetCategoryProductSearch&variables={"lang":"cs",' + f'"category":"{i["code"]}","pageNumber":{j},' + '"includeSponsoredProducts":false,"pageSize":20,"filterFlag":true,"plainChildCategories":true}&extensions={"persistedQuery":{"version":1,"sha256Hash":"52764906c44e42aec923b3896810a61c85d344084ba2080b5c655b3453d4560e"}}')
+				resp = requests.get('https://www.albert.cz/api/v1/?operationName=GetCategoryProductSearch&variables={"lang":"cs",' + f'"category":"{i["code"]}","pageNumber":{j},' + '"includeSponsoredProducts":false,"pageSize":20,"filterFlag":true,"plainChildCategories":true}&extensions={"persistedQuery":{"version":1,"sha256Hash":"73df954a408a1d92f799c2b1b9dc0e40ae4bcbb74e363138503343bfc7951768"}}')
 				if not resp.ok:
 					raise Exception(f"Problem with request at [{resp.url}]:\n{resp.text}")
 				try:
