@@ -42,27 +42,41 @@ class ScraperAlbert(Scraper): # Scan takes 150s
 		
 			
 	def scrape():
-		categories = requests.get('https://www.albert.cz/api/v1/?operationName=LeftHandNavigationBar&variables={"rootCategoryCode":"","cutOffLevel":"1","lang":"cs"}&extensions={"persistedQuery":{"version":1,"sha256Hash":"29a05b50daa7ab7686d28bf2340457e2a31e1a9e4d79db611fcee435536ee01c"}}').json()["data"]["leftHandNavigationBar"]["levelInfo"]
+		_, categories_json = ScraperAlbert.send_query({
+			"operationName": "LeftHandNavigationBar",
+			"variables": {
+				"rootCategoryCode":"",
+				"cutOffLevel":"1",
+				"lang":"cs",
+			},
+			"extensions": {
+				"persistedQuery": {
+					"version":1,
+					"sha256Hash":"29a05b50daa7ab7686d28bf2340457e2a31e1a9e4d79db611fcee435536ee01c"
+				}
+			}
+		}, "query LeftHandNavigationBar($rootCategoryCode: String, $cutOffLevel: String, $lang: String, $topLevelCategoriesToHideIfEmpty: String, $anonymousCartCookie: String) {\n  leftHandNavigationBar(\n    rootCategoryCode: $rootCategoryCode\n    cutOffLevel: $cutOffLevel\n    lang: $lang\n    topLevelCategoriesToHideIfEmpty: $topLevelCategoriesToHideIfEmpty\n    anonymousCartCookie: $anonymousCartCookie\n  ) {\n    categoryTreeList {\n      categoriesInfo {\n        categoryCode\n        levelInfo {\n          ...CategoryFields\n          __typename\n        }\n        __typename\n      }\n      level\n      __typename\n    }\n    levelInfo {\n      ...CategoryFields\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment CategoryFields on CategoryLevelInfo {\n  name\n  productCount\n  url\n  code\n  __typename\n}")
+		categories = categories_json["data"]["leftHandNavigationBar"]["levelInfo"]
 		for i in tqdm(categories):
 			category_name = i["name"]
 			category_url = i["url"].split('/')[2]
 			for j in range(ceil(i["productCount"]/50)): # TODO: Use the pagination info in the response
 				data = {
-					'operationName': 'GetCategoryProductSearch',
-					'variables': {
-						'lang': 'cs',
-						'searchQuery': '',
-						'category': i["code"],
-						'pageNumber': j,
-						'pageSize': 50,
-						'filterFlag': True,
-						'fields': 'PRODUCT_TILE',
-						'plainChildCategories': True
+					"operationName": "GetCategoryProductSearch",
+					"variables": {
+						"lang": "cs",
+						"searchQuery": "",
+						"category": i["code"],
+						"pageNumber": j,
+						"pageSize": 50,
+						"filterFlag": True,
+						"fields": "PRODUCT_TILE",
+						"plainChildCategories": True
 					},
-					'extensions': {
-						'persistedQuery': {
-							'version': 1,
-							'sha256Hash': 'c5bf48545cb429dfbcbdd337dc33dc4c3b82565ec95d29a88113cdb308ea560a'
+					"extensions": {
+						"persistedQuery": {
+							"version": 1,
+							"sha256Hash": "c5bf48545cb429dfbcbdd337dc33dc4c3b82565ec95d29a88113cdb308ea560a"
 						}
 				}}
 				resp, resp_json = ScraperAlbert.send_query(data, PRODUCT_SEARCH_QUERY)
@@ -85,8 +99,8 @@ class ScraperAlbert(Scraper): # Scan takes 150s
 			try:
 				i.price = float(item["price"]["discountedPriceFormatted"].split()[0].replace('.','').replace(',','.'))
 			except:
-				print("Failed to parse the price. Falling back to price.value", item["price"])
 				i.price = item["price"]["value"] 
+				print("Failed to parse the price. Falling back to price.value", item["price"])
 		except:
 			print("Price not available. Skipping", item["price"] if "price" in item else "Price not specified")
 			return None
