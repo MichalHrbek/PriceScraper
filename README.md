@@ -28,6 +28,7 @@
 ### Scraper
 - [x] Automatically update albert query hashes
 - [ ] Scrape the Tesco clubcard price (this is needed to make comparisions make sense, since it is the Tesco equivalent of a discount)
+- [ ] Improve error logging
 ### Data analysis
 - [ ] Show interesting statistic (biggest discounts, new items, etc.)
 ### UI
