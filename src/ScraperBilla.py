@@ -5,6 +5,7 @@ from tqdm import tqdm
 from math import ceil
 from DataManager import append_record
 from datetime import datetime
+from typing import Optional
 
 class ScraperBilla(Scraper): # Scan takes 30s
 	def scrape():
@@ -17,12 +18,16 @@ class ScraperBilla(Scraper): # Scan takes 30s
 			
 			for j in resp["results"]:
 				try:
-					r = ScraperBilla.parse_item(j).__dict__
+					record = ScraperBilla.parse_item(j)
 				except:
 					raise Exception(f"Invalid item:\n{j}")
-				append_record(r)
+				if record:
+					append_record(record.__dict__)
 	
-	def parse_item(item, timestamp:int=None) -> Item:
+	def parse_item(item, timestamp:int=None) -> Optional[Item]:
+		if "price" not in item:
+			print("Price not available. Skipping")
+			return None
 		i = Item()
 		i.name = item["name"]
 		i.category = item["category"]
