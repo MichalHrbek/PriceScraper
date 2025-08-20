@@ -21,5 +21,5 @@ for s in SCRAPERS:
 
 	except Exception as e:
 		print(traceback.format_exc())
-		with open(f"out/error/{int(start_time)}.{s.__name__}.txt", 'w') as f:
+		with open(f"out/error/{int(start_time)}.{s.__name__}.txt", 'w', encoding="utf-8") as f:
 			f.write(traceback.format_exc())

@@ -13,11 +13,11 @@ def generate_index_json():
 	d["items"] = {item_to_path(i): {"name": item_to_str(i), "store": i["store"]} for i in c}
 	d["stores"] = [i.split("/")[1] for i in glob.glob("out/*/")]
 	if "error" in d["stores"]: d["stores"].remove("error")
-	with open("out/index.json", "w") as f:
+	with open("out/index.json", "w", encoding="utf-8") as f:
 		f.write(json.dumps(d))
 
 def generate_index_csv():
-	with open("out/index.csv", "w") as f:
+	with open("out/index.csv", "w", encoding="utf-8") as f:
 		f.write(','.join(PROPS) + "\n")
 		for i in glob.glob("out/*/*.csv"):
 			f.write(linecache.getline(i, 2))
