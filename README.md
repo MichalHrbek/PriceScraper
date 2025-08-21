@@ -6,7 +6,7 @@
 - `python3 src/main.py`
 - The program should finish in about 8 minutes depending on your internet connection
 ### Web UI
-- Generate index of items: `python3 src/GenerateIndex.py`
+- Generate index of items: `python3 src/generate_index.py`
 - Run web server: `cd web; python3 -m http.server`
 - You can download over a year of data scraped everyday at midnight [here](https://prices.kasos.cz/out.tar.gz) or inspect the files [here](https://prices.kasos.cz/data/)
 

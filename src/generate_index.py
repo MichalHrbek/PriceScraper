@@ -1,5 +1,5 @@
 import json, glob, linecache
-from DataManager import get_current_all, PROPS
+from data_manager import get_current_all, PROPS
 
 def item_to_str(item) -> str:
 	return f'{item["name"]}, {item["price"]} CZK, {item["store"]}'

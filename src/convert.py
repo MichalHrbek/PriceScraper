@@ -1,4 +1,4 @@
-from DataManager import *
+from data_manager import *
 import sys, glob, json
 import tqdm
 from collections import defaultdict

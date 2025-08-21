@@ -1,3 +1,7 @@
+class Scraper:
+	def scrape() -> None:
+		pass
+
 class Item:
 	name: str
 	category: str

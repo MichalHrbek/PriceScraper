@@ -1,9 +1,8 @@
-from Scraper import Scraper
-from Item import Item
+from scraper import Scraper, Item
 import requests
 from tqdm import tqdm
 from math import ceil
-from DataManager import append_record
+from data_manager import append_record
 from datetime import datetime
 from typing import Optional
 

@@ -1,8 +1,7 @@
-from Scraper import Scraper
-from Item import Item
+from scraper import Scraper, Item
 import requests
 from tqdm import tqdm
-from DataManager import append_record
+from data_manager import append_record
 from datetime import datetime
 import base64
 import urllib.parse
