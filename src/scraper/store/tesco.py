@@ -1,4 +1,5 @@
-from scraper import Scraper, Item
+from scraper.scraper import Scraper
+from scraper.item import Item
 import requests
 from tqdm import tqdm
 from data_manager import append_record

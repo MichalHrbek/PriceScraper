@@ -1,6 +1,6 @@
-from scraper.tesco import ScraperTesco
-from scraper.billa import ScraperBilla
-from scraper.albert import ScraperAlbert
+from scraper.store.tesco import ScraperTesco
+from scraper.store.billa import ScraperBilla
+from scraper.store.albert import ScraperAlbert
 import time, os, traceback
 
 SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla] # Takes about 8 minutes to complete on my system
