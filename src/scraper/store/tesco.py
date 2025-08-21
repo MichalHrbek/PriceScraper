@@ -6,6 +6,7 @@ from data_manager import append_record
 from datetime import datetime
 import base64
 import urllib.parse
+import logging
 
 HEADERS = {
 	"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0",
@@ -70,7 +71,11 @@ CATEGORY_PRODUCTS_QUERY = """query GetCategoryProducts(
 """
 
 class ScraperTesco(Scraper): # Scan takes 300s
-	def scrape():
+	def __init__(self):
+		self.logger = logging.getLogger(__name__)
+
+	def scrape(self):
+		self.logger.info("Starting")
 		taxonomy = requests.post(ENDPOINT, json={
 			"operationName": "Taxonomy",
 			"query": TAXONOMY_QUERY
@@ -103,7 +108,7 @@ class ScraperTesco(Scraper): # Scan takes 300s
 							append_record(ScraperTesco.parse_item(node["node"]).__dict__)
 							recorded_ids.add(int(node["node"]["id"]))
 				else:
-					raise Exception(f"Problem with request at [{resp.url}]:\n{resp.text}")
+					self.logger.error(f"Problem with request at [{resp.url}]:\n{resp.text}")
 				
 				page += 1
 	

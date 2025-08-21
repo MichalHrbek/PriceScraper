@@ -6,27 +6,33 @@ from math import ceil
 from data_manager import append_record
 from datetime import datetime
 from typing import Optional
+import logging
 
 class ScraperBilla(Scraper): # Scan takes 30s
-	def scrape():
+	def __init__(self):
+		self.logger = logging.getLogger(__name__)
+
+	def scrape(self):
+		self.logger.info("Starting")
 		total = ceil(requests.get("https://shop.billa.cz/api/products?pageSize=0").json()["total"]/500)
 		for i in tqdm(range(total)):
 			resp = requests.get("https://shop.billa.cz/api/products?pageSize=500&page=" + str(i)).json()
 			
 			if "results" not in resp:
-				raise Exception(f"Invalid response at [{resp.url}]:\n{resp.text}")
+				self.logger.error(f"Invalid response at [{resp.url}]:\n{resp.text}")
 			
 			for j in resp["results"]:
 				try:
-					record = ScraperBilla.parse_item(j)
+					record = self.parse_item(j)
 				except:
-					raise Exception(f"Invalid item:\n{j}")
+					self.logger.error(f"Invalid item:\n{j}")
+					continue
 				if record:
 					append_record(record.__dict__)
 	
-	def parse_item(item, timestamp:int=None) -> Optional[Item]:
+	def parse_item(self, item, timestamp:int=None) -> Optional[Item]:
 		if "price" not in item:
-			print("Price not available. Skipping")
+			self.logger.info("Price not available. Skipping item")
 			return None
 		i = Item()
 		i.name = item["name"]

@@ -11,7 +11,7 @@
 - You can download over a year of data scraped everyday at midnight [here](https://prices.kasos.cz/out.tar.gz) or inspect the files [here](https://prices.kasos.cz/data/)
 
 ## Output
-- Output files: `out/{store}/{id}.csv` and `out/error/{timestamp}.{scraper}.txt`
+- Output files: `out/{store}/{id}.csv`, `out/logs/`, `out/error/`
 - Fields that haven't changed since the last entry are null, to save space + all changes are easily visible when you inspect the files in a text editor
 - All stores share these fields: `name`, `category`, `price`, `store`, `id`, `timestamp`, `unit_price`, `unit_type`, `url`
 - Shows the progress while scraping with `tqdm`
@@ -27,8 +27,8 @@
 - [x] Button to download selected item as normal csv
 ### Scraper
 - [x] Automatically update albert query hashes
+- [x] Improve error logging
 - [ ] Scrape the Tesco clubcard price (this is needed to make comparisions make sense, since it is the Tesco equivalent of a discount)
-- [ ] Improve error logging
 ### Data analysis
 - [ ] Show interesting statistic (biggest discounts, new items, etc.)
 ### UI
