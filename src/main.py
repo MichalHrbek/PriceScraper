@@ -14,7 +14,7 @@ def setup_logger():
 	info_handler = logging.FileHandler(f"out/logs/{log_id}.log", encoding="utf-8")
 	info_handler.setLevel(logging.INFO)
 
-	error_handler = logging.FileHandler(f"out/errors/{log_id}.log", encoding="utf-8", delay=True)
+	error_handler = logging.FileHandler(f"out/error/{log_id}.log", encoding="utf-8", delay=True)
 	error_handler.setLevel(logging.ERROR)
 
 	debug_handler = logging.StreamHandler()
