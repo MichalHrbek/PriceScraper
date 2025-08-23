@@ -106,8 +106,8 @@ def get_current_all():
 	files = glob.glob("out/*/*.csv")
 	items = []
 	for i in files:
-		id = int(i.split("/")[-1][:-4])
-		store = i.split("/")[-2]
+		id = int(i.split(os.path.sep)[-1][:-4])
+		store = i.split(os.path.sep)[-2]
 		items.append(get_last_state(store, id))
 	return items
 
@@ -124,7 +124,7 @@ def get_timeline_all():
 	files = glob.glob("out/*/*.csv")
 	items = {}
 	for i in files:
-		id = int(i.split("/")[-1][:-4])
-		store = i.split("/")[-2]
+		id = int(i.split(os.path.sep)[-1][:-4])
+		store = i.split(os.path.sep)[-2]
 		items[str(id)] = get_timeline(store, id)
 	return items

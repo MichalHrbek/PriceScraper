@@ -1,6 +1,7 @@
 from data_manager import *
 import sys, glob, json
 import tqdm
+import os
 from collections import defaultdict
 
 # Converts from the old format to .csv
@@ -12,10 +13,10 @@ if __name__ == "__main__":
 
 	db: dict[str,list[dict]] = defaultdict(list)
 	for i in filepaths:
-		for j in json.loads(open(i).read()):
+		for j in json.loads(open(i, encoding='utf-8').read()):
 			if j["store"] == "albert":
 				j["url"] = "https://www.albert.cz" + j["id"]
-				j["id"] = int(j["id"].split("/")[-1])
+				j["id"] = int(j["id"].split(os.path.sep)[-1])
 				if j["unit_label"] != None:
 					s = j["unit_label"].split()
 					j["unit_price"] = float(s[3].replace(",", "."))
