@@ -11,8 +11,7 @@ def generate_index_json():
 	c = get_current_all()
 	d = {}
 	d["items"] = {item_to_path(i): {"name": item_to_str(i), "store": i["store"]} for i in c}
-	d["stores"] = [i.split("/")[1] for i in glob.glob("out/*/")]
-	if "error" in d["stores"]: d["stores"].remove("error")
+	d["stores"] = [i for i in[j.split("/")[1] for j in glob.glob("out/*/")] if i not in ["error", "logs"]]
 	with open("out/index.json", "w", encoding="utf-8") as f:
 		f.write(json.dumps(d))
 
