@@ -1,5 +1,7 @@
 import csv, os, glob
 
+from tqdm import tqdm
+
 PROPS = [
 	"timestamp",
 	"store",
@@ -105,7 +107,7 @@ def get_timeline(store, id):
 def get_current_all():
 	files = glob.glob("out/*/*.csv")
 	items = []
-	for i in files:
+	for i in tqdm(files):
 		id = int(i.split(os.path.sep)[-1][:-4])
 		store = i.split(os.path.sep)[-2]
 		items.append(get_last_state(store, id))
