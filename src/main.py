@@ -4,6 +4,7 @@ from scraper.store.billa import ScraperBilla
 from scraper.store.albert import ScraperAlbert
 import time, os, logging
 from concurrent.futures import ThreadPoolExecutor
+from typing import Type
 
 SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla]
 
@@ -31,7 +32,7 @@ def setup_logger():
 	logger.addHandler(error_handler)
 	logger.addHandler(debug_handler)
 
-def scrape(scraper: Scraper):
+def scrape(scraper: Type[Scraper]):
 	start_time = time.time()
 
 	scraper = scraper()
