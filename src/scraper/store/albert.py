@@ -65,7 +65,7 @@ class ScraperAlbert(Scraper): # Scan takes 150s
 			}
 		}, "query LeftHandNavigationBar($rootCategoryCode: String, $cutOffLevel: String, $lang: String, $topLevelCategoriesToHideIfEmpty: String, $anonymousCartCookie: String) {\n  leftHandNavigationBar(\n    rootCategoryCode: $rootCategoryCode\n    cutOffLevel: $cutOffLevel\n    lang: $lang\n    topLevelCategoriesToHideIfEmpty: $topLevelCategoriesToHideIfEmpty\n    anonymousCartCookie: $anonymousCartCookie\n  ) {\n    categoryTreeList {\n      categoriesInfo {\n        categoryCode\n        levelInfo {\n          ...CategoryFields\n          __typename\n        }\n        __typename\n      }\n      level\n      __typename\n    }\n    levelInfo {\n      ...CategoryFields\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment CategoryFields on CategoryLevelInfo {\n  name\n  productCount\n  url\n  code\n  __typename\n}")
 		categories = categories_json["data"]["leftHandNavigationBar"]["levelInfo"]
-		for i in tqdm(categories):
+		for i in tqdm(categories, desc=__name__):
 			category_name = i["name"]
 			category_url = i["url"].split('/')[2]
 			for j in range(ceil(i["productCount"]/50)): # TODO: Use the pagination info in the response

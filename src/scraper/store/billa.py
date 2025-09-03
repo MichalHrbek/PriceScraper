@@ -15,7 +15,7 @@ class ScraperBilla(Scraper): # Scan takes 30s
 	def scrape(self):
 		self.logger.info("Starting")
 		total = ceil(requests.get("https://shop.billa.cz/api/products?pageSize=0").json()["total"]/500)
-		for i in tqdm(range(total)):
+		for i in tqdm(range(total), desc=__name__):
 			resp = requests.get("https://shop.billa.cz/api/products?pageSize=500&page=" + str(i)).json()
 			
 			if "results" not in resp:

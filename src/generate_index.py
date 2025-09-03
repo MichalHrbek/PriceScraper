@@ -1,4 +1,4 @@
-import json, glob, linecache
+import json, glob, linecache, os
 from data_manager import get_current_all, PROPS
 
 def item_to_str(item) -> str:
@@ -11,7 +11,7 @@ def generate_index_json():
 	c = get_current_all()
 	d = {}
 	d["items"] = {item_to_path(i): {"name": item_to_str(i), "store": i["store"]} for i in c}
-	d["stores"] = [i for i in[j.split("/")[1] for j in glob.glob("out/*/")] if i not in ["error", "logs"]]
+	d["stores"] = [i for i in[j.split(os.path.sep)[1] for j in glob.glob("out/*/")] if i not in ["error", "logs"]]
 	with open("out/index.json", "w", encoding="utf-8") as f:
 		f.write(json.dumps(d))
 
