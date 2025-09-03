@@ -82,7 +82,7 @@ class ScraperTesco(Scraper): # Scan takes 300s
 		}, headers=HEADERS).json()
 		categories = [i["name"] for i in taxonomy["data"]["taxonomy"] if i["name"] != "Výběr týdne"] # Skipping "Výběr týdne" for better performance since it only contains products already present in other categories
 		recorded_ids: set[int] = set() # To avoid duplicates
-		for i in tqdm(categories):
+		for i in tqdm(categories, desc=__name__):
 			page = 1
 
 			while True:
