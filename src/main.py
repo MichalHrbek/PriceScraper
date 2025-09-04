@@ -47,6 +47,8 @@ def scrape(scraper: Type[Scraper]):
 		scraper.logger.error(f"Stopped - unhandled exception", exc_info=True)
 
 def main():
+	# setup CWD + output dirs
+	os.chdir(os.path.join(os.path.dirname(__file__), '..'))
 	os.makedirs("out", exist_ok=True)
 	os.makedirs("out/error", exist_ok=True)
 	os.makedirs("out/logs", exist_ok=True)

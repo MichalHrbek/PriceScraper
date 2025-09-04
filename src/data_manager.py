@@ -1,6 +1,8 @@
 import csv, os, glob
-
 from tqdm import tqdm
+import typing
+import functools
+from concurrent.futures import ThreadPoolExecutor
 
 PROPS = [
 	"timestamp",
@@ -104,14 +106,20 @@ def get_timeline(store, id):
 			records.append(type_parse(o))
 	return records
 
+def process_file(path: str, getFunc: typing.Callable):
+	id = int(path.split(os.path.sep)[-1][:-4])
+	store = path.split(os.path.sep)[-2]
+	return getFunc(store, id)
 def get_current_all():
 	files = glob.glob("out/*/*.csv")
-	items = []
-	for i in tqdm(files):
-		id = int(i.split(os.path.sep)[-1][:-4])
-		store = i.split(os.path.sep)[-2]
-		items.append(get_last_state(store, id))
-	return items
+	with ThreadPoolExecutor() as executor:
+		results = list(tqdm(
+			executor.map(
+				functools.partial(process_file, getFunc=get_last_state),
+			files),
+		total=len(files)
+		))
+	return results
 
 def get_start_all():
 	files = glob.glob("out/*/*.csv")
@@ -122,6 +130,8 @@ def get_start_all():
 			items.append(next(reader))
 	return items
 
+# NOTE unused
+# TODO refactor using 'process_file'
 def get_timeline_all():
 	files = glob.glob("out/*/*.csv")
 	items = {}
