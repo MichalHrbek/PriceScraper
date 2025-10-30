@@ -32,10 +32,10 @@ class ScraperAlbert(Scraper): # Scan takes 150s
 	def send_persistent_query(data: dict) -> Tuple[bool, requests.Response, Any]:
 		resp = requests.get("https://www.albert.cz/api/v1/?" + ScraperAlbert.build_url(data), headers=HEADERS)
 		resp_json = resp.json()
-		if "errors" in resp:
-			for i in resp["errors"]:
+		if "errors" in resp_json:
+			for i in resp_json["errors"]:
 				if i["message"] == "PersistedQueryNotFound":
-					return False, resp
+					return False, resp, resp_json
 		return True, resp, resp_json
 	
 	def send_query(self, data: dict, query: str) -> Tuple[requests.Response, Any]:
