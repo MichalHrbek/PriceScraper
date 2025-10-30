@@ -28,20 +28,21 @@ class ScraperAlbert(Scraper): # Scan takes 150s
 			encoded_params[key] = value
 		
 		return urllib.parse.urlencode(encoded_params)
-
-	def send_persistent_query(data: dict) -> Tuple[bool, requests.Response, Any]:
+	
+	def send_query(self, data: dict, query: str) -> Tuple[requests.Response, Any]:
+		# Attempt to send persisted query
 		resp = requests.get("https://www.albert.cz/api/v1/?" + ScraperAlbert.build_url(data), headers=HEADERS)
 		resp_json = resp.json()
+		found = True
 		if "errors" in resp_json:
 			for i in resp_json["errors"]:
 				if i["message"] == "PersistedQueryNotFound":
-					return False, resp, resp_json
-		return True, resp, resp_json
-	
-	def send_query(self, data: dict, query: str) -> Tuple[requests.Response, Any]:
-		found, resp, resp_json = ScraperAlbert.send_persistent_query(data)
+					found = False
+					break
 		if found:
 			return resp, resp_json
+		
+		# Include full query in request if it isn't found
 		self.logger.info("Hash not found. Sending full query.")
 		data["query"] = query
 		resp = requests.post("https://www.albert.cz/api/v1/", json=data, headers=HEADERS)
