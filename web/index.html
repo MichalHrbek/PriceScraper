@@ -16,27 +16,34 @@
 			width: 50%;
 			margin-bottom: 5px;
 			margin-top: 5px;
-			/* text-align: center; */
 		}
 		.itemtable {
 			min-height: 25px;
 			width: 50%;
 			overflow: scroll;
 			display:block;
-			height: 90%;
 			padding-right: 15px;
 		}
 		.content {
 			display: flex;
-			flex-direction: row;
+			flex-direction: column;
 			width: 100%;
-			flex-wrap: wrap;
 			height: 100vh;
 			box-sizing: border-box;
 			padding: 10px 10px 10px 10px;
+			gap: 0.5em;
+		}
+		.flexrow {
+			display: flex;
+			width: 100%;
+			flex-direction: row;
 		}
 		.filterbox {
 			width: 100%;
+		}
+		.itemtablebox {
+			flex-grow: 1;
+			overflow-y: hidden;
 		}
 		td:nth-child(1) {
 			width: 100%;
@@ -54,19 +61,23 @@
 			<input type="date" id="start">
 			<label for="end">End: </label>
 			<input type="date" id="end">
-			<br>
+			<label for="storefilter">Stores:</label>
 			<span id="storefilter"></span>
 		</div>
-		<div class="tableheader">
-			<b>Picked</b>
-			<button onclick="removeAll()">🗑️</button>
+		<div class="flexrow">
+			<div class="tableheader">
+				<b>Picked</b>
+				<button onclick="removeAll()">🗑️</button>
+			</div>
+			<div class="tableheader">
+				<b>Filtered</b>
+				<button onclick="pickAll()">☑️</button>
+			</div>
 		</div>
-		<div class="tableheader">
-			<b>Filtered</b>
-			<button onclick="pickAll()">☑️</button>
+		<div class="flexrow itemtablebox">
+			<table id="picked" class="itemtable"></table>
+			<table id="filtered" class="itemtable">
 		</div>
-		<table id="picked" class="itemtable"></table>
-		<table id="filtered" class="itemtable">
 	</div>
 	<script type="module">
         import { plot, filter, removeAll, pickAll } from './js/search.js';
