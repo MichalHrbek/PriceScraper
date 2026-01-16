@@ -8,22 +8,13 @@
 			margin: 0;
 			padding: 0;
 			height: 100%;
+			font-family: Arial, Helvetica, sans-serif;
 		}
 		table {
 			border: 1px solid;
 		}
-		.tableheader {
-			width: 50%;
-			margin-bottom: 5px;
-			margin-top: 5px;
-		}
-		.itemtable {
-			min-height: 25px;
-			width: 50%;
-			overflow: scroll;
-			display:block;
-			padding-right: 15px;
-		}
+
+		/* Page layout */
 		.content {
 			display: flex;
 			flex-direction: column;
@@ -38,8 +29,41 @@
 			width: 100%;
 			flex-direction: row;
 		}
+
+		/* Filters */
 		.filterbox {
 			width: 100%;
+		}
+		label.filterbox {
+			font-size: large;
+		}
+		input.prettyinput, button.prettyinput, span.prettyinput {
+			padding: 0.5em 0.5em;
+			margin: 0.2em 0.1em;
+			display: inline-block;
+			border: 1px solid #aaa;
+			box-sizing: border-box;
+			border-radius: 5px;
+		}
+		#storefilter > input {
+			margin-right: 1em;
+		}
+
+		/* Item list */
+		.tableheader {
+			width: 50%;
+			margin-bottom: 0.5em;
+		}
+		.tableheader > b {
+			font-size: large;
+			margin-right: 0.5em;
+		}
+		.itemtable {
+			min-height: 25px;
+			width: 50%;
+			overflow: scroll;
+			display:block;
+			padding-right: 15px;
 		}
 		.itemtablebox {
 			flex-grow: 1;
@@ -54,24 +78,28 @@
 <body>
 	<div class="content">
 		<div class="filterbox">
-			<input type="text" name="search" id="search" placeholder="Press enter to search" onchange="filter()">
-			<button onclick="filter()">🔍</button>
-			<button onclick="plot()">📈</button>
+			<label for="search">Search:</label>
+			<input type="text" name="search" id="search" placeholder="Press enter to search" onchange="filter()" class="prettyinput">
+			<button onclick="filter()" class="prettyinput">🔍 Search</button>
+			<button onclick="plot()" class="prettyinput">📈 Plot picked</button>
+			<br>
+			<hr>
 			<label for="start">Start: </label>
-			<input type="date" id="start">
+			<input type="date" id="start" class="prettyinput">
 			<label for="end">End: </label>
-			<input type="date" id="end">
+			<input type="date" id="end" class="prettyinput">
 			<label for="storefilter">Stores:</label>
-			<span id="storefilter"></span>
+			<span id="storefilter" class="prettyinput"></span>
+			<hr>
 		</div>
 		<div class="flexrow">
 			<div class="tableheader">
 				<b>Picked</b>
-				<button onclick="removeAll()">🗑️</button>
+				<button onclick="removeAll()" class="prettyinput">🗑️ Remove all</button>
 			</div>
 			<div class="tableheader">
 				<b>Filtered</b>
-				<button onclick="pickAll()">☑️</button>
+				<button onclick="pickAll()" class="prettyinput">☑️ Add all</button>
 			</div>
 		</div>
 		<div class="flexrow itemtablebox">
