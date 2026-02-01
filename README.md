@@ -9,8 +9,8 @@
 ### Web UI
 - Generate index of items: `python3 src/generate_index.py`
 - Run web server: 
-	- (_recommended_) `python3 web/serve.py`
-	- `cd web && python3 -m http.server`
+	- (_universal_) `python3 web/serve.py`
+	- (_posix only_) `cd web && python3 -m http.server`
 - You can download over a year of data scraped everyday at midnight [here](https://prices.kasos.cz/out.tar.gz) or inspect the files [here](https://prices.kasos.cz/data/)
 
 ## Output
