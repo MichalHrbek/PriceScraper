@@ -6,7 +6,7 @@ import time, os, logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import Type
 
-SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla]
+SCRAPERS = [ScraperTesco]
 
 def setup_logger():
 	log_id = str(int(time.time()))

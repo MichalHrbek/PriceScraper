@@ -1,5 +1,6 @@
 # PriceScraper
-- Made to scrape prices of big grocery stores in Czechia that have online catalogues (Albert, Billa, Tesco) 
+- Made to scrape prices of big grocery stores in Czechia that have online catalogues (Tesco)
+- Formerly supported Albert (ended service 23.12.2025) and Billa (ended service 31.1.2026)
 
 ## Usage
 ### Scraping
