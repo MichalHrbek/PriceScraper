@@ -21,7 +21,6 @@ class AliasHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
 with socketserver.TCPServer(("", PORT), AliasHTTPRequestHandler) as httpd:
     url = f"http://localhost:{PORT}"
     print(f"Serving at {url}")
-    # TODO only when not already open
     webbrowser.open(url)
     try:
         httpd.serve_forever()
