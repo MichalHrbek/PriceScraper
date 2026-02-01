@@ -2,11 +2,12 @@ from scraper.scraper import Scraper
 from scraper.store.tesco import ScraperTesco
 from scraper.store.billa import ScraperBilla
 from scraper.store.albert import ScraperAlbert
+from scraper.store.globus import ScraperGlobus
 import time, os, logging
 from concurrent.futures import ThreadPoolExecutor
 from typing import Type
 
-SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla]
+SCRAPERS = [ScraperAlbert, ScraperTesco, ScraperBilla, ScraperGlobus]
 
 def setup_logger():
 	log_id = str(int(time.time()))
