@@ -10,8 +10,12 @@ PORT = 8000
 class AliasHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def translate_path(self, path):
         # serve /data/* from ../out/*
-        if path.startswith("/data"):
-            path = path.replace("data", "../out", 1)
+        # Unsafe - don't expose on public networks
+        if path.startswith('/data/'):
+            relative_path = path.removeprefix('/data/')
+            out_dir = os.path.abspath(os.path.join(os.getcwd(), '..', 'out'))
+            return os.path.join(out_dir, relative_path)
+        
         return super().translate_path(path)
 
 with socketserver.TCPServer(("", PORT), AliasHTTPRequestHandler) as httpd:
