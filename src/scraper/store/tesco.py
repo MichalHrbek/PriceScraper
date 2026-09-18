@@ -106,9 +106,12 @@ class ScraperTesco(Scraper): # Scan takes 300s
 
 				if (not resp.ok) or ("data" not in data):
 					if retries >= MAX_ATTEMPTS:
-						self.logger.error(f"Too many attempts, skipping [{resp.url}]:\n{resp.text}")
-						page += 1
-						continue
+						self.logger.error(f"Too many failed attempts, skipping [{resp.url}]:\n{resp.text}")
+						break
+						# Continuing to the next page of the category could result in an endless cycle
+						# retries = 0
+						# page += 1
+						# continue
 
 					retries += 1
 					self.logger.info("Request failed, retrying after timeout")
@@ -119,15 +122,14 @@ class ScraperTesco(Scraper): # Scan takes 300s
 				offset = data["data"]["category"]["pageInformation"]["offset"]
 				total = data["data"]["category"]["pageInformation"]["total"]
 				# print(i, page, count, offset, total)
+				
+				for node in data["data"]["category"]["results"]:
+					if int(node["node"]["id"]) not in recorded_ids:
+						append_record(ScraperTesco.parse_item(node["node"]).__dict__)
+						recorded_ids.add(int(node["node"]["id"]))
+
 				if count == 0 or count + offset >= total:
 					break
-				if resp.ok:
-					for node in data["data"]["category"]["results"]:
-						if int(node["node"]["id"]) not in recorded_ids:
-							append_record(ScraperTesco.parse_item(node["node"]).__dict__)
-							recorded_ids.add(int(node["node"]["id"]))
-				else:
-					self.logger.error(f"Problem with request at [{resp.url}]:\n{resp.text}")
 				
 				page += 1
 				retries = 0
