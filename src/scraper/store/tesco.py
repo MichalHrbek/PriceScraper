@@ -7,6 +7,7 @@ from datetime import datetime
 import base64
 import urllib.parse
 import logging
+import time
 
 HEADERS = {
 	"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0",
@@ -70,7 +71,11 @@ CATEGORY_PRODUCTS_QUERY = """query GetCategoryProducts(
 }
 """
 
+MAX_ATTEMPTS: int = 2
+RETRY_TIMEOUT: float = 15.0
+
 class ScraperTesco(Scraper): # Scan takes 300s
+
 	def __init__(self):
 		self.logger = logging.getLogger(__name__)
 
@@ -84,6 +89,7 @@ class ScraperTesco(Scraper): # Scan takes 300s
 		recorded_ids: set[int] = set() # To avoid duplicates
 		for i in tqdm(categories, desc=__name__):
 			page = 1
+			retries = 0
 
 			while True:
 				resp = requests.post(ENDPOINT, json={
@@ -95,7 +101,20 @@ class ScraperTesco(Scraper): # Scan takes 300s
 						"facet": "b;" + base64.b64encode(urllib.parse.quote(i).encode()).decode(),
 					}
 				}, headers=HEADERS)
+
 				data = resp.json()
+
+				if (not resp.ok) or ("data" not in data):
+					if retries >= MAX_ATTEMPTS:
+						self.logger.error(f"Too many attempts, skipping [{resp.url}]:\n{resp.text}")
+						page += 1
+						continue
+
+					retries += 1
+					self.logger.info("Request failed, retrying after timeout")
+					time.sleep(RETRY_TIMEOUT)
+					continue
+				
 				count = data["data"]["category"]["pageInformation"]["count"]
 				offset = data["data"]["category"]["pageInformation"]["offset"]
 				total = data["data"]["category"]["pageInformation"]["total"]
@@ -111,6 +130,7 @@ class ScraperTesco(Scraper): # Scan takes 300s
 					self.logger.error(f"Problem with request at [{resp.url}]:\n{resp.text}")
 				
 				page += 1
+				retries = 0
 	
 	def parse_item(item, timestamp:int=None) -> Item:
 		i = Item()
